@@ -5,7 +5,7 @@
 @endsection
 @php
     $setting = App\Models\Utility::settings();
-    
+
 @endphp
 @section('content')
     <div class="row">
@@ -641,7 +641,7 @@
                             top: -10
                         }
                     },
-                    colors: ["#6FD943"],
+                    colors: ["#870808"],
                     labels: ['Used'],
                 };
                 var chart = new ApexCharts(document.querySelector("#device-chart"), options);

@@ -145,7 +145,7 @@ File: style.css
 
 .doc-img.header-color > a[data-value="bg-success"] > span:nth-child(1):after,
   .theme-color.header-color > a[data-value="bg-success"] > span:nth-child(1):after {
-    background: #6fd943;
+    background: #870808;
 }
 
 .doc-img.header-color > a[data-value="bg-info"] > span:nth-child(1):after,
@@ -175,7 +175,7 @@ File: style.css
 
 .doc-img.brand-color > a[data-value="bg-success"] > span:nth-child(1):before,
   .theme-color.brand-color > a[data-value="bg-success"] > span:nth-child(1):before {
-    background: #6fd943;
+    background: #870808;
 }
 
 .doc-img.brand-color > a[data-value="bg-info"] > span:nth-child(1):before,
@@ -205,7 +205,7 @@ File: style.css
 
 .doc-img.themes-color > a[data-value="theme-3"],
   .theme-color.themes-color > a[data-value="theme-3"] {
-    background: linear-gradient(141.55deg, #6FD943 3.46%, #6FD943 99.86%), #6FD943;
+    background: linear-gradient(141.55deg, #870808 3.46%, #870808 99.86%), #870808;
 }
 
 .doc-img.themes-color > a[data-value="theme-2"],
