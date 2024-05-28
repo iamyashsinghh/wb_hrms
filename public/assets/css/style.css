@@ -2101,7 +2101,7 @@ progress {
 
 .table-success {
     --bs-table-color: #212529;
-    --bs-table-bg: #e2f7d9;
+    --bs-table-bg: #87080850;
     --bs-table-border-color: #cfe2c7;
     --bs-table-striped-bg: #d8edd0;
     --bs-table-striped-color: #212529;
@@ -5330,7 +5330,7 @@ textarea.is-invalid.dataTable-input {
 
 .alert-success {
     --bs-alert-color: #438228;
-    --bs-alert-bg: #e2f7d9;
+    --bs-alert-bg: #87080850;
     --bs-alert-border-color: #d4f4c7;
 }
 
@@ -5762,7 +5762,7 @@ textarea.is-invalid.dataTable-input {
 
 .list-group-item-success {
     color: #438228;
-    background-color: #e2f7d9;
+    background-color: #87080850;
 }
 
 .list-group-item-success.list-group-item-action:hover, .list-group-item-success.list-group-item-action:focus {
@@ -14316,16 +14316,16 @@ textarea.is-invalid.dataTable-input {
 }
 
 .bg-light-success {
-    background: #e2f7d9;
+    background: #87080850;
     color: #870808;
 }
 
 .text-light-success {
-    color: #e2f7d9;
+    color: #87080850;
 }
 
 .icon-svg-success {
-    fill: #e2f7d9;
+    fill: #87080850;
     stroke: #870808;
 }
 
@@ -15106,7 +15106,7 @@ textarea.is-invalid.dataTable-input {
 
 .bg-green-100 {
     color: #212529;
-    background: #e2f7d9;
+    background: #87080850;
 }
 
 .bg-green-200 {
@@ -16187,7 +16187,7 @@ body.theme-3 .dash-header .drp-language .drp-text,
 }
 
 body.theme-3 .dash-header .drp-company .theme-avtar {
-    background: #e2f7d9;
+    background: #87080850;
     color: #870808;
 }
 
@@ -16274,9 +16274,9 @@ body.theme-3 .btn-outline-primary {
 }
 
 body.theme-3 .btn-light-primary {
-    background: #e2f7d9;
+    background: #87080850;
     color: #870808;
-    border-color: #e2f7d9;
+    border-color: #87080850;
 }
 
 body.theme-3 .btn-light-primary:hover {
@@ -16307,7 +16307,7 @@ body.theme-3 .btn-check:active + .btn-light-primary,
 
 body.theme-3 .alert-primary {
     --bs-alert-color: #438228;
-    --bs-alert-bg: #e2f7d9;
+    --bs-alert-bg: #87080850;
     --bs-alert-border-color: #d4f4c7;
 }
 
@@ -16316,9 +16316,9 @@ body.theme-3 .alert-primary .alert-link {
 }
 
 body.theme-3 .badge.bg-light-primary {
-    background: #e2f7d9;
+    background: #87080850;
     color: #870808;
-    border-color: #e2f7d9;
+    border-color: #87080850;
 }
 
 body.theme-3 .page-item.active .page-link {
@@ -21242,9 +21242,9 @@ body:not(.minimenu) .dash-sidebar .dash-submenu .dash-submenu .dash-submenu > .d
 }
 
 .badge.bg-light-success {
-    background: #e2f7d9;
+    background: #87080850;
     color: #870808;
-    border-color: #e2f7d9;
+    border-color: #87080850;
 }
 
 .badge.bg-light-info {
@@ -21375,9 +21375,9 @@ body:not(.minimenu) .dash-sidebar .dash-submenu .dash-submenu .dash-submenu > .d
 }
 
 .btn-light-success {
-    background: #e2f7d9;
+    background: #87080850;
     color: #870808;
-    border-color: #e2f7d9;
+    border-color: #87080850;
 }
 
 .btn-light-success:hover {
@@ -22273,8 +22273,8 @@ select.form-control[data-multiselectsplitter-firstselect-selector], select.custo
 }
 
 .form-check .form-check-input.input-light-success:checked {
-    border-color: #e2f7d9;
-    background-color: #e2f7d9;
+    border-color: #87080850;
+    background-color: #87080850;
 }
 
 .form-check .form-check-input.input-light-success:checked[type="checkbox"] {
@@ -25297,7 +25297,7 @@ body.theme-10 .team-lists img {
 
 .fc-event.event-success,
   .fc-event:not([href]).event-success {
-    background: #e2f7d9;
+    background: #87080850;
     border-color: #870808;
     color: #870808;
 }
