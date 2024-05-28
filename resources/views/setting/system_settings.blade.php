@@ -257,20 +257,20 @@
         .btn-outline-success.active,
         .btn-outline-success.dropdown-toggle.show {
             color: #ffffff;
-            background-color: #584ed2 !important;
-            border-color: #584ed2 !important;
+            background-color: #9a0004 !important;
+            border-color: #9a0004 !important;
         }
 
 
         .btn-outline-success:hover {
             color: #ffffff;
-            background-color: #584ed2 !important;
-            border-color: #584ed2 !important;
+            background-color: #9a0004 !important;
+            border-color: #9a0004 !important;
         }
 
         .btn.btn-outline-success {
-            color: #584ed2;
-            border-color: #584ed2 !important;
+            color: #9a0004;
+            border-color: #9a0004 !important;
         }
     </style>
 @endif

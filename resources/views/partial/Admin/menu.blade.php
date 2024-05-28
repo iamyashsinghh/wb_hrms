@@ -403,18 +403,9 @@
                         </span>
                     </a>
                     <ul class="dash-submenu">
-                        <li class="dash-item {{ Request::segment(1) == 'award' ? 'active' : '' }}">
-                            <a class="dash-link" href="{{ route('award.index') }}">{{ __('Award') }}</a>
-                        </li>
-                        <li class="dash-item">
-                            <a class="dash-link" href="{{ route('transfer.index') }}">{{ __('Transfer') }}</a>
-                        </li>
                         <li class="dash-item">
                             <a class="dash-link"
                                 href="{{ route('resignation.index') }}">{{ __('Resignation') }}</a>
-                        </li>
-                        <li class="dash-item">
-                            <a class="dash-link" href="{{ route('travel.index') }}">{{ __('Trip') }}</a>
                         </li>
                         <li class="dash-item">
                             <a class="dash-link" href="{{ route('promotion.index') }}">{{ __('Promotion') }}</a>

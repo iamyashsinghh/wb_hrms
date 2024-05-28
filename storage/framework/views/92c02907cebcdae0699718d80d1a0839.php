@@ -400,18 +400,9 @@
                         </span>
                     </a>
                     <ul class="dash-submenu">
-                        <li class="dash-item <?php echo e(Request::segment(1) == 'award' ? 'active' : ''); ?>">
-                            <a class="dash-link" href="<?php echo e(route('award.index')); ?>"><?php echo e(__('Award')); ?></a>
-                        </li>
-                        <li class="dash-item">
-                            <a class="dash-link" href="<?php echo e(route('transfer.index')); ?>"><?php echo e(__('Transfer')); ?></a>
-                        </li>
                         <li class="dash-item">
                             <a class="dash-link"
                                 href="<?php echo e(route('resignation.index')); ?>"><?php echo e(__('Resignation')); ?></a>
-                        </li>
-                        <li class="dash-item">
-                            <a class="dash-link" href="<?php echo e(route('travel.index')); ?>"><?php echo e(__('Trip')); ?></a>
                         </li>
                         <li class="dash-item">
                             <a class="dash-link" href="<?php echo e(route('promotion.index')); ?>"><?php echo e(__('Promotion')); ?></a>
