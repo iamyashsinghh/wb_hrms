@@ -20,14 +20,6 @@
                 <span class="drp-text"> {{ ucFirst($languages[$lang]) }}
                 </span>
             </a>
-            <div class="dropdown-menu dash-h-dropdown dropdown-menu-end">
-                @foreach ($languages as $code => $language)
-                    <a href="{{ route('login', $code) }}" tabindex="0"
-                        class="dropdown-item {{ $code == $lang ? 'active' : '' }}">
-                        <span>{{ ucFirst($language) }}</span>
-                    </a>
-                @endforeach
-            </div>
         </li>
     </div>
 @endsection

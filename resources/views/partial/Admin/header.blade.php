@@ -136,7 +136,7 @@
                 }
             @endphp
 
-            <li class="dropdown dash-h-item drp-language">
+            {{-- <li class="dropdown dash-h-item drp-language">
                 <a class="dash-head-link dropdown-toggle arrow-none me-0 " data-bs-toggle="dropdown" href="#"
                     role="button" aria-haspopup="false" aria-expanded="false" id="dropdownLanguage">
                     <i class="ti ti-world nocolor"></i>
@@ -144,10 +144,7 @@
                     <i class="ti ti-chevron-down drp-arrow nocolor"></i>
                 </a>
                 <div class="dropdown-menu dash-h-dropdown dropdown-menu-end" aria-labelledby="dropdownLanguage">
-                    {{-- @foreach (App\Models\Utility::languages() as $lang)
-                        <a href="{{ route('change.language', $lang) }}"
-                            class="dropdown-item {{ basename(App::getLocale()) == $lang ? 'text-danger' : '' }}">{{ Str::upper($lang) }}</a>
-                    @endforeach --}}
+
                     @foreach (App\Models\Utility::languages() as $code => $lang)
                         <a href="{{ route('change.language', $code) }}"
                             class="dropdown-item {{ $currantLang == $code ? 'text-primary' : '' }}">
@@ -165,7 +162,7 @@
                             class="dropdown-item text-primary">{{ __('Manage Language') }}</a>
                     @endif
                 </div>
-            </li>
+            </li> --}}
 
         </ul>
     </div>

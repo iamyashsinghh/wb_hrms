@@ -167,12 +167,10 @@ class AuthenticatedSessionController extends Controller
             $query['referrer_host'] = !empty($referrer['host']);
             $query['referrer_path'] = !empty($referrer['path']);
 
-
             isset($query['timezone']) ? date_default_timezone_set($query['timezone']) : '';
 
-
             $json = json_encode($query);
-
+            
             $login_detail = new LoginDetail();
             $login_detail->user_id = Auth::user()->id;
             $login_detail->ip = $ip;

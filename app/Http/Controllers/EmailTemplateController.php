@@ -15,7 +15,7 @@ class EmailTemplateController extends Controller
     {
         $usr = \Auth::user();
 
-        if ($usr->type == 'super admin' || $usr->type == 'company') {
+        if ($usr->type == 'company' || $usr->type == 'company') {
             $EmailTemplates = EmailTemplate::all();
 
             return view('email_templates.index', compact('EmailTemplates'));
@@ -27,7 +27,7 @@ class EmailTemplateController extends Controller
 
     public function create()
     {
-        if (\Auth::user()->type == 'super admin') {
+        if (\Auth::user()->type == 'company') {
             return view('email_templates.create');
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
@@ -39,7 +39,7 @@ class EmailTemplateController extends Controller
     {
         $usr = \Auth::user();
 
-        if (\Auth::user()->type == 'super admin') {
+        if (\Auth::user()->type == 'company') {
             $validator = \Validator::make(
                 $request->all(),
                 [
@@ -143,7 +143,7 @@ class EmailTemplateController extends Controller
     // Used For View Email Template Language Wise
     public function manageEmailLang($id, $lang = 'en')
     {
-        if (\Auth::user()->type == 'super admin') {
+        if (\Auth::user()->type == 'company') {
             $languages         = Utility::languages();
             $emailTemplate     = EmailTemplate::getemailTemplate();
             // $currEmailTempLang = EmailTemplateLang::where('lang', $lang)->first();
@@ -152,7 +152,7 @@ class EmailTemplateController extends Controller
                 $currEmailTempLang       = EmailTemplateLang::where('parent_id', '=', $id)->where('lang', 'en')->first();
                 $currEmailTempLang->lang = $lang;
             }
-            if (\Auth::user()->type == 'super admin') {
+            if (\Auth::user()->type == 'company') {
                 $emailTemplate     = EmailTemplate::where('id', '=', $id)->first();
             } else {
                 $settings         = Utility::settings();
@@ -168,7 +168,7 @@ class EmailTemplateController extends Controller
     // Used For Store Email Template Language Wise
     public function storeEmailLang(Request $request, $id)
     {
-        if (\Auth::user()->type == 'super admin') {
+        if (\Auth::user()->type == 'company') {
             $validator = \Validator::make(
                 $request->all(),
                 [
@@ -217,7 +217,7 @@ class EmailTemplateController extends Controller
 
         $usr = \Auth::user();
 
-        if($usr->type == 'super admin' || $usr->type == 'company')
+        if($usr->type == 'company')
         {
             UserEmailTemplate::where('user_id', $usr->id)->update([ 'is_active' => 0]);
             foreach ($post as $key => $value) {

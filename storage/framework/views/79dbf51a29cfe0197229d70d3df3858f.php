@@ -15,20 +15,13 @@
         ]);
     ?>
     <div class="lang-dropdown-only-desk">
-        <li class="dropdown dash-h-item drp-language">
+        <li class="dropdown  drp-language">
             <a class="dash-head-link dropdown-toggle btn" href="#" data-bs-toggle="dropdown" aria-expanded="false">
                 <span class="drp-text"> <?php echo e(ucFirst($languages[$lang])); ?>
 
                 </span>
             </a>
-            <div class="dropdown-menu dash-h-dropdown dropdown-menu-end">
-                <?php $__currentLoopData = $languages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $code => $language): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                    <a href="<?php echo e(route('login', $code)); ?>" tabindex="0"
-                        class="dropdown-item <?php echo e($code == $lang ? 'active' : ''); ?>">
-                        <span><?php echo e(ucFirst($language)); ?></span>
-                    </a>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-            </div>
+            
         </li>
     </div>
 <?php $__env->stopSection(); ?>

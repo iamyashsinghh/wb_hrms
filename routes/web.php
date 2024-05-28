@@ -124,12 +124,8 @@ use Illuminate\Support\Facades\Artisan;
 
 
 Route::get('/', function () {
-        return redirect('/login');
+    return redirect('/login');
 });
-
-// Route::get('/dashboard', function () {
-//     return view('dashboard.dashboard');
-// })->middleware(['auth'])->name('dashboard');
 
 
 require __DIR__ . '/auth.php';
@@ -140,9 +136,6 @@ Route::get('/check', [HomeController::class, 'check'])->middleware(
         'XSS',
     ]
 );
-// Route::get('/password/resets/{lang?}', 'Auth\LoginController@showLinkRequestForm')->name('change.langPass');
-
-Route::get('/', [HomeController::class, 'index'])->name('home')->middleware(['XSS']);
 
 Route::get('career/{id}/{lang}', [JobController::class, 'career'])->name('career');
 Route::get('job/requirement/{code}/{lang}', [JobController::class, 'jobRequirement'])->name('job.requirement');
@@ -154,26 +147,12 @@ Route::any('/cookie-consent', [SettingsController::class, 'CookieConsent'])->nam
 
 Route::group(['middleware' => ['verified']], function () {
 
-
-
     Route::get('/dashboard', [HomeController::class, 'index'])->middleware(['auth', 'XSS'])->name('dashboard');
-    Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('/home/getlanguvage', [HomeController::class, 'getlanguvage'])->name('home.getlanguvage');
+    Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware(['auth', 'XSS',]);
 
     Route::group(
-        [
-            'middleware' => [
-                'auth',
-                'XSS',
-            ],
-        ],
+        ['middleware' => ['auth', 'XSS',]],
         function () {
-
             Route::resource('settings', SettingsController::class);
             Route::post('email-settings', [SettingsController::class, 'saveEmailSettings'])->name('email.settings');
             Route::post('company-settings', [SettingsController::class, 'saveCompanySettings'])->name('company.settings');
@@ -193,7 +172,6 @@ Route::group(['middleware' => ['verified']], function () {
 
             // cookie consent
             Route::post('cookie-setting', [SettingsController::class, 'saveCookieSettings'])->name('cookie.setting')->middleware(['auth', 'XSS']);
-
 
             Route::get('company-setting', [SettingsController::class, 'companyIndex'])->name('company.setting');
             Route::post('company-email-setting/{name?}', [EmailTemplateController::class, 'updateStatus'])->name('company.email.setting');
@@ -222,15 +200,7 @@ Route::group(['middleware' => ['verified']], function () {
         }
     );
 
-    Route::group(
-        [
-            'middleware' => [
-                'auth',
-                'XSS',
-            ],
-        ],
-        function () {
-
+    Route::group(['middleware' => ['auth', 'XSS']], function () {
             Route::get('/orders', [StripePaymentController::class, 'index'])->name('order.index');
             Route::get('/stripe/{code}', [StripePaymentController::class, 'stripe'])->name('stripe');
             Route::get('/stripe_request/{code}', [StripePaymentController::class, 'stripe_request'])->name('stripe_request');
@@ -239,732 +209,172 @@ Route::group(['middleware' => ['verified']], function () {
     );
 
     Route::group(
-        [
-            'middleware' => [
-                'auth',
-                'XSS',
-            ],
-        ],
+        ['middleware' => ['auth', 'XSS']],
         function () {
             Route::get('/banktransfer/{code}', [BankTransferController::class, 'BankTransfer'])->name('banktransfer');
             Route::post('/banktransfer', [BankTransferController::class, 'banktransferstore'])->name('banktransfer.post');
         }
     );
 
-    Route::get('order/{id}/action', [BankTransferController::class, 'action'])->name('order.action')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::get('order/{id}/action', [BankTransferController::class, 'action'])->name('order.action')->middleware(['auth', 'XSS',]);
 
-    Route::post('order/approve/{id}', [BankTransferController::class, 'changeaction'])->name('order.changeaction')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::post('order/approve/{id}', [BankTransferController::class, 'changeaction'])->name('order.changeaction')->middleware(['auth', 'XSS',]);
 
-    Route::delete('OrderDestroy/{id}', [PlanController::class, 'OrderDestroy'])->name('order.destroy')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::delete('OrderDestroy/{id}', [PlanController::class, 'OrderDestroy'])->name('order.destroy')->middleware(['auth', 'XSS',]);
 
     // Email Templates
     Route::get('email_template_lang/{id}/{lang?}', [EmailTemplateController::class, 'manageEmailLang'])->name('manage.email.language')->middleware(['auth', 'XSS']);
     Route::post('email_template_store/{pid}', [EmailTemplateController::class, 'storeEmailLang'])->name('store.email.language')->middleware(['auth']);
     Route::post('email_template_status/{id}', [EmailTemplateController::class, 'updateStatus'])->name('status.email.language')->middleware(['auth']);
 
-    Route::resource('email_template', EmailTemplateController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('email_template_lang', EmailTemplateLangController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get(
-        '/test',
+    Route::resource('email_template', EmailTemplateController::class)->middleware(['auth', 'XSS',]);
 
-        [SettingsController::class, 'testEmail']
-    )->name('test.email')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::post(
-        '/test/send',
-        [SettingsController::class, 'testEmailSend']
-
-    )->name('test.email.send')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::get('/test',[SettingsController::class, 'testEmail'])->name('test.email')->middleware(['auth','XSS']);
+    Route::post('/test/send',[SettingsController::class, 'testEmailSend'])->name('test.email.send')->middleware(['auth','XSS']);
     // End
 
-    Route::resource('user', UserController::class)
-        ->middleware(
-            [
-                'auth',
-                'XSS',
-            ]
-        );
+    Route::resource('user', UserController::class)->middleware(['auth','XSS']);
     // user log
     Route::get('userlogsView/{id}', [EmployeeController::class, 'view'])->name('userlog.view')->middleware(['auth', 'XSS']);
 
-    Route::post('employee/json', [EmployeeController::class, 'json'])->name('employee.json')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::post('employee/json', [EmployeeController::class, 'json'])->name('employee.json')->middleware(['auth','XSS',]);
 
-    Route::post('employee/getdepartment', [EmployeeController::class, 'getdepartment'])->name('employee.getdepartment')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::post('employee/getdepartment', [EmployeeController::class, 'getdepartment'])->name('employee.getdepartment')->middleware(['auth','XSS']);
 
-    Route::post('branch/employee/json', [EmployeeController::class, 'employeeJson'])->name('branch.employee.json')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('employee-profile', [EmployeeController::class, 'profile'])->name('employee.profile')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('show-employee-profile/{id}', [EmployeeController::class, 'profileShow'])->name('show.employee.profile')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('lastlogin', [EmployeeController::class, 'lastLogin'])->name('lastlogin')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::post('branch/employee/json', [EmployeeController::class, 'employeeJson'])->name('branch.employee.json')->middleware(['auth','XSS']);
+    Route::get('employee-profile', [EmployeeController::class, 'profile'])->name('employee.profile')->middleware(['auth','XSS']);
+    Route::get('show-employee-profile/{id}', [EmployeeController::class, 'profileShow'])->name('show.employee.profile')->middleware(['auth','XSS']);
 
-    Route::resource('employee', EmployeeController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::get('lastlogin', [EmployeeController::class, 'lastLogin'])->name('lastlogin')->middleware(['auth','XSS'] );
 
-    Route::delete('lastlogin/{id}', [EmployeeController::class, 'logindestroy'])->name('employee.logindestroy')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::resource('employee', EmployeeController::class)->middleware(['auth','XSS']);
 
-    Route::resource('department', DepartmentController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('designation', DesignationController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('document', DocumentController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('branch', BranchController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('awardtype', AwardTypeController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('award', AwardController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::delete('lastlogin/{id}', [EmployeeController::class, 'logindestroy'])->name('employee.logindestroy')->middleware(['auth','XSS']);
+
+    Route::resource('department', DepartmentController::class)->middleware(['auth','XSS']);
+    Route::resource('designation', DesignationController::class)->middleware(['auth','XSS']);
+    Route::resource('document', DocumentController::class)->middleware(['auth','XSS']);
+    Route::resource('branch', BranchController::class)->middleware(['auth','XSS']);
+    Route::resource('awardtype', AwardTypeController::class)->middleware(['auth','XSS']);
+    Route::resource('award', AwardController::class)->middleware(['auth','XSS']);
     Route::get('termination/{id}/description', [TerminationController::class, 'description'])->name('termination.description');
 
-    Route::resource('termination', TerminationController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('terminationtype', TerminationTypeController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::post('announcement/getdepartment', [AnnouncementController::class, 'getdepartment'])->name('announcement.getdepartment')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::post('announcement/getemployee', [AnnouncementController::class, 'getemployee'])->name('announcement.getemployee')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('announcement', AnnouncementController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::resource('termination', TerminationController::class)->middleware(['auth','XSS']);
+    Route::resource('terminationtype', TerminationTypeController::class)->middleware(['auth','XSS']);
+    Route::post('announcement/getdepartment', [AnnouncementController::class, 'getdepartment'])->name('announcement.getdepartment')->middleware(['auth','XSS']);
+    Route::post('announcement/getemployee', [AnnouncementController::class, 'getemployee'])->name('announcement.getemployee')->middleware(['auth','XSS']);
+    Route::resource('announcement', AnnouncementController::class)->middleware(['auth','XSS']);
 
 
-    Route::get('holiday/calender', [HolidayController::class, 'calender'])->name('holiday.calender')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('holiday', HolidayController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::get('holiday/calender', [HolidayController::class, 'calender'])->name('holiday.calender')->middleware(['auth','XSS']);
+    Route::resource('holiday', HolidayController::class)->middleware(['auth','XSS']);
 
     // Google Calendar
     Route::any('holiday/get_holiday_data', [HolidayController::class, 'get_holiday_data'])->name('holiday.get_holiday_data')->middleware(['auth', 'XSS']);
     // Route::any('holiday/export-event', [HolidayController::class, 'export_event'])->name('holiday.export-holiday')->middleware(['auth', 'XSS']);
 
-    Route::get('employee/salary/{eid}', [SetSalaryController::class, 'employeeBasicSalary'])->name('employee.basic.salary')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('allowances/create/{eid}', [AllowanceController::class, 'allowanceCreate'])->name('allowances.create')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('commissions/create/{eid}', [CommissionController::class, 'commissionCreate'])->name('commissions.create')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('loans/create/{eid}', [LoanController::class, 'loanCreate'])->name('loans.create')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('saturationdeductions/create/{eid}', [SaturationDeductionController::class, 'saturationdeductionCreate'])->name('saturationdeductions.create')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('otherpayments/create/{eid}', [OtherPaymentController::class, 'otherpaymentCreate'])->name('otherpayments.create')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('overtimes/create/{eid}', [OvertimeController::class, 'overtimeCreate'])->name('overtimes.create')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::get('employee/salary/{eid}', [SetSalaryController::class, 'employeeBasicSalary'])->name('employee.basic.salary')->middleware(['auth','XSS']);
+    Route::get('allowances/create/{eid}', [AllowanceController::class, 'allowanceCreate'])->name('allowances.create')->middleware(['auth','XSS']);
+    Route::get('commissions/create/{eid}', [CommissionController::class, 'commissionCreate'])->name('commissions.create')->middleware(['auth','XSS']);
+    Route::get('loans/create/{eid}', [LoanController::class, 'loanCreate'])->name('loans.create')->middleware(['auth','XSS']);
+    Route::get('saturationdeductions/create/{eid}', [SaturationDeductionController::class, 'saturationdeductionCreate'])->name('saturationdeductions.create')->middleware(['auth','XSS']);
+    Route::get('otherpayments/create/{eid}', [OtherPaymentController::class, 'otherpaymentCreate'])->name('otherpayments.create')->middleware(['auth','XSS']);
+    Route::get('overtimes/create/{eid}', [OvertimeController::class, 'overtimeCreate'])->name('overtimes.create')->middleware(['auth','XSS']);
 
 
     //payslip
 
-    Route::resource('paysliptype', PayslipTypeController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-
-    Route::resource('allowance', AllowanceController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-
-    Route::resource('commission', CommissionController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-    Route::resource('allowanceoption', AllowanceOptionController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-    Route::resource('loanoption', LoanOptionController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-    Route::resource('deductionoption', DeductionOptionController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-
-    Route::resource('loan', LoanController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-
-    Route::resource('saturationdeduction', SaturationDeductionController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-
-    Route::resource('otherpayment', OtherPaymentController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-    Route::resource('overtime', OvertimeController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-    Route::post('event/getdepartment', [EventController::class, 'getdepartment'])->name('event.getdepartment')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::post('event/getemployee', [EventController::class, 'getemployee'])->name('event.getemployee')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
+    Route::resource('paysliptype', PayslipTypeController::class)->middleware(['auth','XSS']);
+    Route::resource('allowance', AllowanceController::class)->middleware(['auth','XSS']);
+    Route::resource('commission', CommissionController::class)->middleware(['auth','XSS']);
+    Route::resource('allowanceoption', AllowanceOptionController::class)->middleware(['auth','XSS']);
+    Route::resource('loanoption', LoanOptionController::class)->middleware(['auth','XSS']);
+    Route::resource('deductionoption', DeductionOptionController::class)->middleware(['auth','XSS']);
+    Route::resource('loan', LoanController::class)->middleware(['auth','XSS']);
+    Route::resource('saturationdeduction', SaturationDeductionController::class)->middleware(['auth','XSS']);
+    Route::resource('otherpayment', OtherPaymentController::class)->middleware(['auth','XSS']);
+    Route::resource('overtime', OvertimeController::class)->middleware(['auth','XSS']);
+    Route::post('event/getdepartment', [EventController::class, 'getdepartment'])->name('event.getdepartment')->middleware(['auth','XSS']);
+    Route::post('event/getemployee', [EventController::class, 'getemployee'])->name('event.getemployee')->middleware(['auth','XSS']);
     Route::get('event/data/{id}', [EventController::class, 'showData'])->name('eventsshow');
-    Route::resource('event', EventController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-
-
+    Route::resource('event', EventController::class)->middleware(['auth','XSS']);
     Route::get('import/event/file', [EventController::class, 'importFile'])->name('event.file.import');
     Route::post('import/event', [EventController::class, 'import'])->name('event.import');
     Route::get('export/event', [EventController::class, 'export'])->name('event.export');
-
-    Route::post('meeting/getdepartment', [MeetingController::class, 'getdepartment'])->name('meeting.getdepartment')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::post('meeting/getemployee', [MeetingController::class, 'getemployee'])->name('meeting.getemployee')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('meeting', MeetingController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-    Route::get('calender/meeting', [MeetingController::class, 'calender'])->name('meeting.calender')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
+    Route::post('meeting/getdepartment', [MeetingController::class, 'getdepartment'])->name('meeting.getdepartment')->middleware(['auth','XSS']);
+    Route::post('meeting/getemployee', [MeetingController::class, 'getemployee'])->name('meeting.getemployee')->middleware(['auth','XSS']);
+    Route::resource('meeting', MeetingController::class)->middleware(['auth','XSS']);
+    Route::get('calender/meeting', [MeetingController::class, 'calender'])->name('meeting.calender')->middleware(['auth','XSS']);
     Route::any('/meeting/get_meeting_data', [MeetingController::class, 'get_meeting_data'])->name('meeting.get_meeting_data')->middleware(['auth', 'XSS']);
+    Route::post('employee/update/sallary/{id}', [SetSalaryController::class, 'employeeUpdateSalary'])->name('employee.salary.update')->middleware(['auth','XSS']);
+    Route::get('salary/employeeSalary', [SetSalaryController::class, 'employeeSalary'])->name('employeesalary')->middleware(['auth','XSS']);
+    Route::resource('setsalary', SetSalaryController::class)->middleware(['auth','XSS']);
+    Route::get('payslip/paysalary/{id}/{date}', [PaySlipController::class, 'paysalary'])->name('payslip.paysalary')->middleware(['auth','XSS']);
+    Route::get('payslip/bulk_pay_create/{date}', [PaySlipController::class, 'bulk_pay_create'])->name('payslip.bulk_pay_create')->middleware(['auth','XSS']);
+    Route::post('payslip/bulkpayment/{date}', [PaySlipController::class, 'bulkpayment'])->name('payslip.bulkpayment')->middleware(['auth','XSS']);
+    Route::post('payslip/search_json', [PaySlipController::class, 'search_json'])->name('payslip.search_json')->middleware(['auth','XSS']);
+    Route::get('payslip/employeepayslip', [PaySlipController::class, 'employeepayslip'])->name('payslip.employeepayslip')->middleware(['auth','XSS']);
+    Route::get('payslip/showemployee/{id}', [PaySlipController::class, 'showemployee'])->name('payslip.showemployee')->middleware(['auth','XSS']);
+    Route::get('payslip/editemployee/{id}', [PaySlipController::class, 'editemployee'])->name('payslip.editemployee')->middleware(['auth','XSS']);
+    Route::post('payslip/editemployee/{id}/{month}', [PaySlipController::class, 'updateEmployee'])->name('payslip.updateemployee')->middleware(['auth','XSS']);
+    Route::get('payslip/pdf/{id}/{m}', [PaySlipController::class, 'pdf'])->name('payslip.pdf')->middleware(['auth','XSS']);
+    Route::get('payslip/payslipPdf/{id}', [PaySlipController::class, 'payslipPdf'])->name('payslip.payslipPdf')->middleware(['auth','XSS']);
+    Route::get('payslip/send/{id}/{m}', [PaySlipController::class, 'send'])->name('payslip.send')->middleware(['auth','XSS']);
+    Route::get('payslip/delete/{id}', [PaySlipController::class, 'destroy'])->name('payslip.delete')->middleware(['auth','XSS']);
+    Route::resource('payslip', PaySlipController::class)->middleware(['auth','XSS']);
+    Route::resource('resignation', ResignationController::class)->middleware(['auth','XSS']);
+    Route::resource('travel', TravelController::class)->middleware(['auth','XSS']);
+    Route::resource('promotion', PromotionController::class)->middleware(['auth','XSS']);
+    Route::resource('transfer', TransferController::class)->middleware(['auth','XSS']);
+    Route::resource('complaint', ComplaintController::class)->middleware(['auth','XSS']);
+    Route::resource('warning', WarningController::class)->middleware(['auth','XSS']);
 
-    Route::post('employee/update/sallary/{id}', [SetSalaryController::class, 'employeeUpdateSalary'])->name('employee.salary.update')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('salary/employeeSalary', [SetSalaryController::class, 'employeeSalary'])->name('employeesalary')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::get('profile', [UserController::class, 'profile'])->name('profile')->middleware(['auth','XSS']);
 
+    Route::post('edit-profile', [UserController::class, 'editprofile'])->name('update.account')->middleware(['auth','XSS']);
 
-    Route::resource('setsalary', SetSalaryController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::resource('accountlist', AccountListController::class)->middleware(['auth','XSS']);
+    Route::get('accountbalance', [AccountListController::class, 'account_balance'])->name('accountbalance')->middleware(['auth','XSS']);
 
-    Route::get('payslip/paysalary/{id}/{date}', [PaySlipController::class, 'paysalary'])->name('payslip.paysalary')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('payslip/bulk_pay_create/{date}', [PaySlipController::class, 'bulk_pay_create'])->name('payslip.bulk_pay_create')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::post('payslip/bulkpayment/{date}', [PaySlipController::class, 'bulkpayment'])->name('payslip.bulkpayment')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::post('payslip/search_json', [PaySlipController::class, 'search_json'])->name('payslip.search_json')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('payslip/employeepayslip', [PaySlipController::class, 'employeepayslip'])->name('payslip.employeepayslip')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('payslip/showemployee/{id}', [PaySlipController::class, 'showemployee'])->name('payslip.showemployee')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('payslip/editemployee/{id}', [PaySlipController::class, 'editemployee'])->name('payslip.editemployee')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::get('leave/{id}/action', [LeaveController::class, 'action'])->name('leave.action')->middleware(['auth','XSS']);
 
-    Route::post('payslip/editemployee/{id}/{month}', [PaySlipController::class, 'updateEmployee'])->name('payslip.updateemployee')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('payslip/pdf/{id}/{m}', [PaySlipController::class, 'pdf'])->name('payslip.pdf')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('payslip/payslipPdf/{id}', [PaySlipController::class, 'payslipPdf'])->name('payslip.payslipPdf')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('payslip/send/{id}/{m}', [PaySlipController::class, 'send'])->name('payslip.send')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::post('leave/changeaction', [LeaveController::class, 'changeaction'])->name('leave.changeaction')->middleware(['auth','XSS']);
+    Route::post('leave/jsoncount', [LeaveController::class, 'jsoncount'])->name('leave.jsoncount')->middleware(['auth','XSS']);
+    Route::resource('leave', LeaveController::class)->middleware(['auth','XSS']);
 
-    Route::get('payslip/delete/{id}', [PaySlipController::class, 'destroy'])->name('payslip.delete')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-    Route::resource('payslip', PaySlipController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-
-    Route::resource('resignation', ResignationController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('travel', TravelController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('promotion', PromotionController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('transfer', TransferController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('complaint', ComplaintController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('warning', WarningController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-    Route::get('profile', [UserController::class, 'profile'])->name('profile')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-    Route::post('edit-profile', [UserController::class, 'editprofile'])->name('update.account')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-
-    Route::resource('accountlist', AccountListController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('accountbalance', [AccountListController::class, 'account_balance'])->name('accountbalance')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-
-    Route::get('leave/{id}/action', [LeaveController::class, 'action'])->name('leave.action')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-    Route::post('leave/changeaction', [LeaveController::class, 'changeaction'])->name('leave.changeaction')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::post('leave/jsoncount', [LeaveController::class, 'jsoncount'])->name('leave.jsoncount')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('leave', LeaveController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-    Route::get('calender/leave', [LeaveController::class, 'calender'])->name('leave.calender')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::get('calender/leave', [LeaveController::class, 'calender'])->name('leave.calender')->middleware(['auth','XSS']);
 
     Route::any('leave/get_leave_data', [LeaveController::class, 'get_leave_data'])->name('leave.get_leave_data')->middleware(['auth', 'XSS']);
 
-    Route::get('ticket/{id}/reply', [TicketController::class, 'reply'])->name('ticket.reply')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::post('ticket/changereply', [TicketController::class, 'changereply'])->name('ticket.changereply')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('ticket', TicketController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::get('ticket/{id}/reply', [TicketController::class, 'reply'])->name('ticket.reply')->middleware(['auth','XSS']);
+    Route::post('ticket/changereply', [TicketController::class, 'changereply'])->name('ticket.changereply')->middleware(['auth','XSS']);
+    Route::resource('ticket', TicketController::class)->middleware(['auth','XSS']);
 
-    Route::get('attendanceemployee/bulkattendance', [AttendanceEmployeeController::class, 'bulkAttendance'])->name('attendanceemployee.bulkattendance')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::post('attendanceemployee/bulkattendance', [AttendanceEmployeeController::class, 'bulkAttendanceData'])->name('attendanceemployee.bulkattendance')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::get('attendanceemployee/bulkattendance', [AttendanceEmployeeController::class, 'bulkAttendance'])->name('attendanceemployee.bulkattendance')->middleware(['auth','XSS']);
+    Route::post('attendanceemployee/bulkattendance', [AttendanceEmployeeController::class, 'bulkAttendanceData'])->name('attendanceemployee.bulkattendance')->middleware(['auth','XSS']);
 
-    Route::post('attendanceemployee/attendance', [AttendanceEmployeeController::class, 'attendance'])->name('attendanceemployee.attendance')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::post('attendanceemployee/attendance', [AttendanceEmployeeController::class, 'attendance'])->name('attendanceemployee.attendance')->middleware(['auth','XSS']);
 
-    Route::resource('attendanceemployee', AttendanceEmployeeController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::resource('attendanceemployee', AttendanceEmployeeController::class)->middleware(['auth','XSS']);
 
     //import attendance
     Route::get('import/attendance/file', [AttendanceEmployeeController::class, 'importFile'])->name('attendance.file.import');
     Route::post('import/attendance', [AttendanceEmployeeController::class, 'import'])->name('attendance.import');
 
-    Route::resource('timesheet', TimeSheetController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::resource('timesheet', TimeSheetController::class)->middleware(['auth','XSS']);
 
+    Route::resource('expensetype', ExpenseTypeController::class)->middleware(['auth','XSS']);
+    Route::resource('incometype', IncomeTypeController::class)->middleware(['auth','XSS']);
+    Route::resource('paymenttype', PaymentTypeController::class)->middleware(['auth','XSS']);
+    Route::resource('leavetype', LeaveTypeController::class)->middleware(['auth','XSS']);
 
-    Route::resource('expensetype', ExpenseTypeController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('incometype', IncomeTypeController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('paymenttype', PaymentTypeController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('leavetype', LeaveTypeController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::resource('payees', PayeesController::class)->middleware(['auth','XSS']);
+    Route::resource('payer', PayerController::class)->middleware(['auth','XSS']);
+    Route::resource('deposit', DepositController::class)->middleware(['auth','XSS']);
+    Route::resource('expense', ExpenseController::class)->middleware(['auth','XSS']);
+    Route::resource('transferbalance', TransferBalanceController::class)->middleware(['auth','XSS']);
 
-    Route::resource('payees', PayeesController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('payer', PayerController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('deposit', DepositController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('expense', ExpenseController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('transferbalance', TransferBalanceController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-
-    Route::group(
-        [
-            'middleware' => [
-                'auth',
-                'XSS',
-            ],
-        ],
-        function () {
+    Route::group(['middleware' => ['auth','XSS']], function () {
             Route::get('change-language/{lang}', [LanguageController::class, 'changeLanquage'])->name('change.language');
             Route::get('manage-language/{lang}', [LanguageController::class, 'manageLanguage'])->name('manage.language');
             Route::post('store-language-data/{lang}', [LanguageController::class, 'storeLanguageData'])->name('store.language.data');
@@ -975,69 +385,18 @@ Route::group(['middleware' => ['verified']], function () {
         }
     );
 
-    Route::resource('roles', RoleController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('permissions', PermissionController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::resource('roles', RoleController::class)->middleware(['auth','XSS']);
+    Route::resource('permissions', PermissionController::class)->middleware(['auth','XSS']);
 
-    Route::get('user/{id}/plan', [UserController::class, 'upgradePlan'])->name('plan.upgrade')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('user/{id}/plan/{pid}', [UserController::class, 'activePlan'])->name('plan.active')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::get('user/{id}/plan', [UserController::class, 'upgradePlan'])->name('plan.upgrade')->middleware(['auth','XSS']);
+    Route::get('user/{id}/plan/{pid}', [UserController::class, 'activePlan'])->name('plan.active')->middleware(['auth','XSS']);
 
-    Route::resource('plans', PlanController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    // Route::get('/plan_request/{code}', 'PlanController@plan_request')->name('plan_request')->middleware(
-    //     [
-    //         'auth',
-    //         'XSS',
-    //     ]
-    // );
+    Route::resource('plans', PlanController::class)->middleware(['auth','XSS']);
 
-
-    // Route::resource('plan_requests', 'PlanRequestController');
-
-    // Route::get('/plan_requests/update/{id}', 'PlanRequestController@update')->name('plan_request.update')->middleware(
-    //     [
-    //         'auth',
-    //         'XSS',
-    //     ]
-    // );
-
-    Route::group(
-        [
-            'middleware' => [
-                'auth',
-                'XSS',
-
-            ],
-        ],
-        function () {
+    Route::group(['middleware' => ['auth','XSS']],function () {
             Route::resource('plan_request', PlanRequestController::class);
         }
     );
-
-
 
     // Plan Request Module
     Route::get('plan_request', [PlanRequestController::class, 'index'])->name('plan_request.index')->middleware(['auth', 'XSS',]);
@@ -1047,464 +406,184 @@ Route::group(['middleware' => ['verified']], function () {
     Route::get('request_cancel/{id}', [PlanRequestController::class, 'cancelRequest'])->name('request.cancel')->middleware(['auth', 'XSS',]);
     // End Plan Request Module
 
-
-
     Route::post('change-password', [UserController::class, 'updatePassword'])->name('update.password');
 
-    Route::resource('coupons', CouponController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('account-assets', AssetController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('document-upload', DucumentUploadController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('indicator', IndicatorController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('appraisal', AppraisalController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('goaltype', GoalTypeController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('goaltracking', GoalTrackingController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('company-policy', CompanyPolicyController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::resource('coupons', CouponController::class)->middleware(['auth','XSS']);
+    Route::resource('account-assets', AssetController::class)->middleware(['auth','XSS']);
+    Route::resource('document-upload', DucumentUploadController::class)->middleware(['auth','XSS']);
+    Route::resource('indicator', IndicatorController::class)->middleware(['auth','XSS']);
+    Route::resource('appraisal', AppraisalController::class)->middleware(['auth','XSS']);
+    Route::resource('goaltype', GoalTypeController::class)->middleware(['auth','XSS']);
+    Route::resource('goaltracking', GoalTrackingController::class)->middleware(['auth','XSS']);
+    Route::resource('company-policy', CompanyPolicyController::class)->middleware(['auth','XSS']);
 
-    Route::resource('notification-templates', NotificationTemplatesController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::resource('notification-templates', NotificationTemplatesController::class)->middleware(['auth','XSS']);
     Route::get('notification-templates/{id?}/{lang?}/', [NotificationTemplatesController::class, 'index'])->name('notification-templates.index')->middleware(['auth', 'XSS']);
 
-    Route::resource('trainingtype', TrainingTypeController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('trainer', TrainerController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::resource('trainingtype', TrainingTypeController::class)->middleware(['auth','XSS']);
+    Route::resource('trainer', TrainerController::class)->middleware(['auth','XSS']);
+
+    Route::post('training/status', [TrainingController::class, 'updateStatus'])->name('training.status')->middleware(['auth','XSS']);
+    Route::resource('training', TrainingController::class)->middleware(['auth','XSS']);
+
+    Route::post('training/getemployee', [TrainingController::class, 'getemployee'])->name('training.getemployee')->middleware(['auth','XSS']);
+
+    Route::post('plan-pay-with-paypal', [PaypalController::class, 'planPayWithPaypal'])->name('plan.pay.with.paypal')->middleware(['auth','XSS']);
+    Route::get('{id}/plan-get-payment-status', [PaypalController::class, 'planGetPaymentStatus'])->name('plan.get.payment.status')->middleware(['auth','XSS']);
+    Route::get('/apply-coupon', [CouponController::class, 'applyCoupon'])->name('apply.coupon')->middleware(['auth','XSS' ]);
+
+    Route::get('report/income-expense', [ReportController::class, 'incomeVsExpense'])->name('report.income-expense')->middleware(['auth','XSS']);
+    Route::get('report/leave', [ReportController::class, 'leave'])->name('report.leave')->middleware(['auth','XSS']);
+    Route::get('employee/{id}/leave/{status}/{type}/{month}/{year}', [ReportController::class, 'employeeLeave'])->name('report.employee.leave')->middleware(['auth','XSS']);
+    Route::get('report/account-statement', [ReportController::class, 'accountStatement'])->name('report.account.statement')->middleware(['auth','XSS']);
+    Route::get('report/payroll', [ReportController::class, 'payroll'])->name('report.payroll')->middleware(['auth','XSS']);
+    Route::get('report/monthly/attendance', [ReportController::class, 'monthlyAttendance'])->name('report.monthly.attendance')->middleware(['auth','XSS']);
+
+    Route::post('monthly/getdepartment', [ReportController::class, 'getdepartment'])->name('monthly.getdepartment')->middleware(['auth','XSS']);
+    Route::post('monthly/getemployee', [ReportController::class, 'getemployee'])->name('monthly.getemployee')->middleware(['auth','XSS']);
+
+    Route::get('report/attendance/{month}/{branch}/{department}/{employee}', [ReportController::class, 'exportCsv'])->name('report.attendance')->middleware(['auth','XSS']);
+
+    Route::get('report/timesheet', [ReportController::class, 'timesheet'])->name('report.timesheet')->middleware(['auth','XSS']);
 
 
-
-    Route::post('training/status', [TrainingController::class, 'updateStatus'])->name('training.status')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::resource('training', TrainingController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-    Route::post('training/getemployee', [TrainingController::class, 'getemployee'])->name('training.getemployee')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-    Route::post('plan-pay-with-paypal', [PaypalController::class, 'planPayWithPaypal'])->name('plan.pay.with.paypal')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('{id}/plan-get-payment-status', [PaypalController::class, 'planGetPaymentStatus'])->name('plan.get.payment.status')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get(
-        '/apply-coupon',
-        [CouponController::class, 'applyCoupon'],
-    )->name('apply.coupon')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-
-    Route::get('report/income-expense', [ReportController::class, 'incomeVsExpense'])->name('report.income-expense')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('report/leave', [ReportController::class, 'leave'])->name('report.leave')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('employee/{id}/leave/{status}/{type}/{month}/{year}', [ReportController::class, 'employeeLeave'])->name('report.employee.leave')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('report/account-statement', [ReportController::class, 'accountStatement'])->name('report.account.statement')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('report/payroll', [ReportController::class, 'payroll'])->name('report.payroll')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('report/monthly/attendance', [ReportController::class, 'monthlyAttendance'])->name('report.monthly.attendance')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-    Route::post('monthly/getdepartment', [ReportController::class, 'getdepartment'])->name('monthly.getdepartment')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::post('monthly/getemployee', [ReportController::class, 'getemployee'])->name('monthly.getemployee')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-    Route::get('report/attendance/{month}/{branch}/{department}/{employee}', [ReportController::class, 'exportCsv'])->name('report.attendance')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-    Route::get('report/timesheet', [ReportController::class, 'timesheet'])->name('report.timesheet')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
 
 
     //------------------------------------  Recurtment --------------------------------
 
-    Route::resource('job-category', JobCategoryController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::resource('job-category', JobCategoryController::class)->middleware(['auth','XSS']);
+
+    Route::resource('job-stage', JobStageController::class)->middleware(['auth','XSS']);
+    Route::post('job-stage/order', [JobStageController::class, 'order'])->name('job.stage.order')->middleware(['auth','XSS']);
+
+    Route::resource('job', JobController::class)->middleware(['auth','XSS']);
+
+    Route::get('career/{id}/{lang}', [JobController::class, 'career'])->name('career');
+    Route::get('job/requirement/{code}/{lang}', [JobController::class, 'jobRequirement'])->name('job.requirement');
+    Route::get('job/apply/{code}/{lang}', [JobController::class, 'jobApply'])->name('job.apply');
+    Route::post('job/apply/data/{code}', [JobController::class, 'jobApplyData'])->name('job.apply.data');
+
+    Route::get('candidates-job-applications', [JobApplicationController::class, 'candidate'])->name('job.application.candidate')->middleware(['auth','XSS']);
+
+    Route::resource('job-application', JobApplicationController::class)->middleware(['auth','XSS']);
+
+    Route::post('job-application/order', [JobApplicationController::class, 'order'])->name('job.application.order')->middleware(['auth','XSS']);
+    Route::post('job-application/{id}/rating', [JobApplicationController::class, 'rating'])->name('job.application.rating')->middleware(['auth','XSS']);
+    Route::delete('job-application/{id}/archive', [JobApplicationController::class, 'archive'])->name('job.application.archive')->middleware(['auth','XSS']);
+
+    Route::post('job-application/{id}/skill/store', [JobApplicationController::class, 'addSkill'])->name('job.application.skill.store')->middleware(['auth','XSS']);
+    Route::post('job-application/{id}/note/store', [JobApplicationController::class, 'addNote'])->name('job.application.note.store')->middleware(['auth','XSS']);
+    Route::delete('job-application/{id}/note/destroy', [JobApplicationController::class, 'destroyNote'])->name('job.application.note.destroy')->middleware(['auth','XSS']);
+    Route::post('job-application/getByJob', [JobApplicationController::class, 'getByJob'])->name('get.job.application')->middleware(['auth','XSS']);
 
 
-    Route::resource('job-stage', JobStageController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::post('job-stage/order', [JobStageController::class, 'order'])->name('job.stage.order')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::get('job-onboard', [JobApplicationController::class, 'jobOnBoard'])->name('job.on.board')->middleware(['auth','XSS']);
+    Route::get('job-onboard/create/{id}', [JobApplicationController::class, 'jobBoardCreate'])->name('job.on.board.create')->middleware(['auth','XSS']);
+    Route::post('job-onboard/store/{id}', [JobApplicationController::class, 'jobBoardStore'])->name('job.on.board.store')->middleware(['auth','XSS']);
 
+    Route::get('job-onboard/edit/{id}', [JobApplicationController::class, 'jobBoardEdit'])->name('job.on.board.edit')->middleware(['auth','XSS']);
+    Route::post('job-onboard/update/{id}', [JobApplicationController::class, 'jobBoardUpdate'])->name('job.on.board.update')->middleware(['auth','XSS']);
+    Route::delete('job-onboard/delete/{id}', [JobApplicationController::class, 'jobBoardDelete'])->name('job.on.board.delete')->middleware(['auth','XSS']);
+    Route::get('job-onboard/convert/{id}', [JobApplicationController::class, 'jobBoardConvert'])->name('job.on.board.convert')->middleware(['auth','XSS']);
+    Route::post('job-onboard/convert/{id}', [JobApplicationController::class, 'jobBoardConvertData'])->name('job.on.board.convert')->middleware(['auth','XSS']);
 
-    Route::resource('job', JobController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::post('job-application/stage/change', [JobApplicationController::class, 'stageChange'])->name('job.application.stage.change')->middleware(['auth','XSS']);
 
-    // Route::get('career/{id}/{lang}', [JobController::class, 'career'])->name('career');
-    // Route::get('job/requirement/{code}/{lang}', [JobController::class, 'jobRequirement'])->name('job.requirement');
-    // Route::get('job/apply/{code}/{lang}', [JobController::class, 'jobApply'])->name('job.apply');
-    // Route::post('job/apply/data/{code}', [JobController::class, 'jobApplyData'])->name('job.apply.data');
+    Route::resource('custom-question', CustomQuestionController::class)->middleware(['auth','XSS', ]);
 
+    Route::resource('interview-schedule', InterviewScheduleController::class)->middleware(['auth','XSS']);
 
-    Route::get('candidates-job-applications', [JobApplicationController::class, 'candidate'])->name('job.application.candidate')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-    Route::resource('job-application', JobApplicationController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-    Route::post('job-application/order', [JobApplicationController::class, 'order'])->name('job.application.order')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::post('job-application/{id}/rating', [JobApplicationController::class, 'rating'])->name('job.application.rating')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::delete('job-application/{id}/archive', [JobApplicationController::class, 'archive'])->name('job.application.archive')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-    Route::post('job-application/{id}/skill/store', [JobApplicationController::class, 'addSkill'])->name('job.application.skill.store')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::post('job-application/{id}/note/store', [JobApplicationController::class, 'addNote'])->name('job.application.note.store')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::delete('job-application/{id}/note/destroy', [JobApplicationController::class, 'destroyNote'])->name('job.application.note.destroy')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::post('job-application/getByJob', [JobApplicationController::class, 'getByJob'])->name('get.job.application')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-
-    Route::get('job-onboard', [JobApplicationController::class, 'jobOnBoard'])->name('job.on.board')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('job-onboard/create/{id}', [JobApplicationController::class, 'jobBoardCreate'])->name('job.on.board.create')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::post('job-onboard/store/{id}', [JobApplicationController::class, 'jobBoardStore'])->name('job.on.board.store')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-    Route::get('job-onboard/edit/{id}', [JobApplicationController::class, 'jobBoardEdit'])->name('job.on.board.edit')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::post('job-onboard/update/{id}', [JobApplicationController::class, 'jobBoardUpdate'])->name('job.on.board.update')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::delete('job-onboard/delete/{id}', [JobApplicationController::class, 'jobBoardDelete'])->name('job.on.board.delete')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::get('job-onboard/convert/{id}', [JobApplicationController::class, 'jobBoardConvert'])->name('job.on.board.convert')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-    Route::post('job-onboard/convert/{id}', [JobApplicationController::class, 'jobBoardConvertData'])->name('job.on.board.convert')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-
-    Route::post('job-application/stage/change', [JobApplicationController::class, 'stageChange'])->name('job.application.stage.change')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-    Route::resource('custom-question', CustomQuestionController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-
-    Route::resource('interview-schedule', InterviewScheduleController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
-
-    Route::get('interview-schedule/create/{id?}', [InterviewScheduleController::class, 'create'])->name('interview-schedule.create')->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::get('interview-schedule/create/{id?}', [InterviewScheduleController::class, 'create'])->name('interview-schedule.create')->middleware(['auth', 'XSS',]);
 
     Route::any('/interview-schedule/get_interview-schedule_data', [InterviewScheduleController::class, 'get_interview_schedule_data'])->name('interview-schedule.get_interview-schedule_data')->middleware(['auth', 'XSS']);
+
+
 
 
     //================================= Custom Landing Page ====================================//
 
     // Route::get('/landingpage', 'LandingPageSectionController@index')->name('custom_landing_page.index')->middleware(['auth', 'XSS']);
-    Route::get('/LandingPage/show/{id}', [LandingPageSectionController::class, 'show']);
-    Route::post('/LandingPage/setConetent', [LandingPageSectionController::class, 'setConetent'])->middleware(['auth', 'XSS']);
-    Route::get('/get_landing_page_section/{name}', function ($name) {
-        $plans = \DB::table('plans')->get();
-
-        return view('custom_landing_page.' . $name, compact('plans'));
-    });
-    Route::post('/LandingPage/removeSection/{id}', [LandingPageSectionController::class, 'removeSection'])->middleware(['auth', 'XSS']);
-    Route::post('/LandingPage/setOrder', [LandingPageSectionController::class, 'setOrder'])->middleware(['auth', 'XSS']);
-    Route::post('/LandingPage/copySection', [LandingPageSectionController::class, 'copySection'])->middleware(['auth', 'XSS']);
+    // Route::get('/LandingPage/show/{id}', [LandingPageSectionController::class, 'show']);
+    // Route::post('/LandingPage/setConetent', [LandingPageSectionController::class, 'setConetent'])->middleware(['auth', 'XSS']);
+    // Route::get('/get_landing_page_section/{name}', function ($name) {
+    //     $plans = \DB::table('plans')->get();
+    //     return view('custom_landing_page.' . $name, compact('plans'));
+    // });
+    // Route::post('/LandingPage/removeSection/{id}', [LandingPageSectionController::class, 'removeSection'])->middleware(['auth', 'XSS']);
+    // Route::post('/LandingPage/setOrder', [LandingPageSectionController::class, 'setOrder'])->middleware(['auth', 'XSS']);
+    // Route::post('/LandingPage/copySection', [LandingPageSectionController::class, 'copySection'])->middleware(['auth', 'XSS']);
 
 
     //================================= Payment Gateways  ====================================//
 
-    Route::post('/plan-pay-with-paystack', [PaystackPaymentController::class, 'planPayWithPaystack'])->name('plan.pay.with.paystack')->middleware(['auth', 'XSS']);
-    Route::get('/plan/paystack/{pay_id}/{plan_id}', [PaystackPaymentController::class, 'getPaymentStatus'])->name('plan.paystack');
+    // Route::post('/plan-pay-with-paystack', [PaystackPaymentController::class, 'planPayWithPaystack'])->name('plan.pay.with.paystack')->middleware(['auth', 'XSS']);
+    // Route::get('/plan/paystack/{pay_id}/{plan_id}', [PaystackPaymentController::class, 'getPaymentStatus'])->name('plan.paystack');
 
-    Route::post('/plan-pay-with-flaterwave', [FlutterwavePaymentController::class, 'planPayWithFlutterwave'])->name('plan.pay.with.flaterwave')->middleware(['auth', 'XSS']);
-    Route::get('/plan/flaterwave/{txref}/{plan_id}', [FlutterwavePaymentController::class, 'getPaymentStatus'])->name('plan.flaterwave');
+    // Route::post('/plan-pay-with-flaterwave', [FlutterwavePaymentController::class, 'planPayWithFlutterwave'])->name('plan.pay.with.flaterwave')->middleware(['auth', 'XSS']);
+    // Route::get('/plan/flaterwave/{txref}/{plan_id}', [FlutterwavePaymentController::class, 'getPaymentStatus'])->name('plan.flaterwave');
 
-    Route::post('/plan-pay-with-razorpay',  [RazorpayPaymentController::class, 'planPayWithRazorpay'])->name('plan.pay.with.razorpay')->middleware(['auth', 'XSS']);
-    Route::get('/plan/razorpay/{txref}/{plan_id}', [RazorpayPaymentController::class, 'getPaymentStatus'])->name('plan.razorpay');
+    // Route::post('/plan-pay-with-razorpay', [RazorpayPaymentController::class, 'planPayWithRazorpay'])->name('plan.pay.with.razorpay')->middleware(['auth', 'XSS']);
+    // Route::get('/plan/razorpay/{txref}/{plan_id}', [RazorpayPaymentController::class, 'getPaymentStatus'])->name('plan.razorpay');
 
-    Route::post('/plan-pay-with-paytm',  [PaytmPaymentController::class, 'planPayWithPaytm'])->name('plan.pay.with.paytm')->middleware(['auth', 'XSS']);
-    Route::post('/plan/paytm/{plan}', [PaytmPaymentController::class, 'getPaymentStatus'])->name('plan.paytm');
+    // Route::post('/plan-pay-with-paytm', [PaytmPaymentController::class, 'planPayWithPaytm'])->name('plan.pay.with.paytm')->middleware(['auth', 'XSS']);
+    // Route::post('/plan/paytm/{plan}', [PaytmPaymentController::class, 'getPaymentStatus'])->name('plan.paytm');
 
-    Route::post('/plan-pay-with-mercado',  [MercadoPaymentController::class, 'planPayWithMercado'])->name('plan.pay.with.mercado')->middleware(['auth', 'XSS']);
-    Route::get('/plan/mercado/{plan}',  [MercadoPaymentController::class, 'getPaymentStatus'])->name('plan.mercado');
+    // Route::post('/plan-pay-with-mercado', [MercadoPaymentController::class, 'planPayWithMercado'])->name('plan.pay.with.mercado')->middleware(['auth', 'XSS']);
+    // Route::get('/plan/mercado/{plan}', [MercadoPaymentController::class, 'getPaymentStatus'])->name('plan.mercado');
 
-    Route::post('/plan-pay-with-mollie',  [MolliePaymentController::class, 'planPayWithMollie'])->name('plan.pay.with.mollie')->middleware(['auth', 'XSS']);
-    Route::get('/plan/mollie/{plan}', [MolliePaymentController::class, 'getPaymentStatus'])->name('plan.mollie');
+    // Route::post('/plan-pay-with-mollie', [MolliePaymentController::class, 'planPayWithMollie'])->name('plan.pay.with.mollie')->middleware(['auth', 'XSS']);
+    // Route::get('/plan/mollie/{plan}', [MolliePaymentController::class, 'getPaymentStatus'])->name('plan.mollie');
 
-    Route::post('/plan-pay-with-skrill', [SkrillPaymentController::class, 'planPayWithSkrill'])->name('plan.pay.with.skrill')->middleware(['auth', 'XSS']);
-    Route::get('/plan/skrill/{plan}',  [SkrillPaymentController::class, 'getPaymentStatus'])->name('plan.skrill');
+    // Route::post('/plan-pay-with-skrill', [SkrillPaymentController::class, 'planPayWithSkrill'])->name('plan.pay.with.skrill')->middleware(['auth', 'XSS']);
+    // Route::get('/plan/skrill/{plan}', [SkrillPaymentController::class, 'getPaymentStatus'])->name('plan.skrill');
 
-    Route::post('/plan-pay-with-coingate', [CoingatePaymentController::class, 'planPayWithCoingate'])->name('plan.pay.with.coingate')->middleware(['auth', 'XSS']);
-    Route::get('/plan/coingate/{plan}', [CoingatePaymentController::class, 'getPaymentStatus'])->name('plan.coingate');
+    // Route::post('/plan-pay-with-coingate', [CoingatePaymentController::class, 'planPayWithCoingate'])->name('plan.pay.with.coingate')->middleware(['auth', 'XSS']);
+    // Route::get('/plan/coingate/{plan}', [CoingatePaymentController::class, 'getPaymentStatus'])->name('plan.coingate');
 
-    Route::post('paymentwall', [PaymentWallPaymentController::class, 'paymentwall'])->name('paymentwall');
-    Route::post('plan-pay-with-paymentwall/{plan}', [PaymentWallPaymentController::class, 'planPayWithPaymentwall'])->name('plan.pay.with.paymentwall');
-    Route::any('/plan/{flag}', [PaymentWallPaymentController::class, 'paymenterror'])->name('callback.error');
-    // Route::get('/plans/{flag}', ['as' => 'error.plan.show','uses' => 'PaymentWallPaymentController@planeerror']);
+    // Route::post('paymentwall', [PaymentWallPaymentController::class, 'paymentwall'])->name('paymentwall');
+    // Route::post('plan-pay-with-paymentwall/{plan}', [PaymentWallPaymentController::class, 'planPayWithPaymentwall'])->name('plan.pay.with.paymentwall');
+    // Route::any('/plan/{flag}', [PaymentWallPaymentController::class, 'paymenterror'])->name('callback.error');
+    // // Route::get('/plans/{flag}', ['as' => 'error.plan.show','uses' => 'PaymentWallPaymentController@planeerror']);
 
-    Route::Post('plan-pay-with-toyyibpay', [ToyyibpayPaymentController::class, 'charge'])->name('plan.pay.with.toyyibpay')->middleware(['auth', 'XSS']);
-    Route::get('/plan/toyyibpay/{plan}/{coupon}/{amount}', [ToyyibpayPaymentController::class, 'status'])->name('plan.toyyibpay');
+    // Route::Post('plan-pay-with-toyyibpay', [ToyyibpayPaymentController::class, 'charge'])->name('plan.pay.with.toyyibpay')->middleware(['auth', 'XSS']);
+    // Route::get('/plan/toyyibpay/{plan}/{coupon}/{amount}', [ToyyibpayPaymentController::class, 'status'])->name('plan.toyyibpay');
 
-    Route::post('payfast-plan', [PayfastController::class, 'index'])->name('payfast.payment')->middleware(['auth']);
-    Route::get('payfast-plan/{success}', [PayfastController::class, 'success'])->name('payfast.payment.success')->middleware(['auth']);
+    // Route::post('payfast-plan', [PayfastController::class, 'index'])->name('payfast.payment')->middleware(['auth']);
+    // Route::get('payfast-plan/{success}', [PayfastController::class, 'success'])->name('payfast.payment.success')->middleware(['auth']);
 
-    Route::post('iyzipay/prepare', [IyziPayController::class, 'initiatePayment'])->name('iyzipay.payment.init');
-    Route::post('iyzipay/callback/plan/{id}/{amount}/{coupan_code?}', [IyzipayController::class, 'iyzipayCallback'])->name('iyzipay.payment.callback');
+    // Route::post('iyzipay/prepare', [IyziPayController::class, 'initiatePayment'])->name('iyzipay.payment.init');
+    // Route::post('iyzipay/callback/plan/{id}/{amount}/{coupan_code?}', [IyzipayController::class, 'iyzipayCallback'])->name('iyzipay.payment.callback');
 
-    Route::post('/sspay', [SspayController::class, 'SspayPaymentPrepare'])->name('plan.sspaypayment');
-    Route::get('sspay-payment-plan/{plan_id}/{amount}/{couponCode}', [SspayController::class, 'SspayPlanGetPayment'])->middleware(['auth'])->name('plan.sspay.callback');
+    // Route::post('/sspay', [SspayController::class, 'SspayPaymentPrepare'])->name('plan.sspaypayment');
+    // Route::get('sspay-payment-plan/{plan_id}/{amount}/{couponCode}', [SspayController::class, 'SspayPlanGetPayment'])->middleware(['auth'])->name('plan.sspay.callback');
 
-    Route::post('plan-pay-with-paytab', [PaytabController::class, 'planPayWithpaytab'])->middleware(['auth'])->name('plan.pay.with.paytab');
-    Route::any('paytab-success/plan', [PaytabController::class, 'PaytabGetPayment'])->middleware(['auth'])->name('plan.paytab.success');
+    // Route::post('plan-pay-with-paytab', [PaytabController::class, 'planPayWithpaytab'])->middleware(['auth'])->name('plan.pay.with.paytab');
+    // Route::any('paytab-success/plan', [PaytabController::class, 'PaytabGetPayment'])->middleware(['auth'])->name('plan.paytab.success');
 
-    Route::any('/payment/initiate', [BenefitPaymentController::class, 'initiatePayment'])->name('benefit.initiate');
-    Route::any('call_back', [BenefitPaymentController::class, 'call_back'])->name('benefit.call_back');
+    // Route::any('/payment/initiate', [BenefitPaymentController::class, 'initiatePayment'])->name('benefit.initiate');
+    // Route::any('call_back', [BenefitPaymentController::class, 'call_back'])->name('benefit.call_back');
 
-    Route::post('cashfree/payments/store', [CashfreeController::class, 'cashfreePaymentStore'])->name('cashfree.payment');
-    Route::any('cashfree/payments/success', [CashfreeController::class, 'cashfreePaymentSuccess'])->name('cashfreePayment.success');
+    // Route::post('cashfree/payments/store', [CashfreeController::class, 'cashfreePaymentStore'])->name('cashfree.payment');
+    // Route::any('cashfree/payments/success', [CashfreeController::class, 'cashfreePaymentSuccess'])->name('cashfreePayment.success');
 
-    Route::post('/aamarpay/payment', [AamarpayController::class, 'pay'])->name('pay.aamarpay.payment');
-    Route::any('/aamarpay/success/{data}', [AamarpayController::class, 'aamarpaysuccess'])->name('pay.aamarpay.success');
+    // Route::post('/aamarpay/payment', [AamarpayController::class, 'pay'])->name('pay.aamarpay.payment');
+    // Route::any('/aamarpay/success/{data}', [AamarpayController::class, 'aamarpaysuccess'])->name('pay.aamarpay.success');
 
-    Route::post('/paytr/payment/{plan_id}', [PaytrController::class, 'PlanpayWithPaytr'])->name('plan.pay.with.paytr');
-    Route::get('/paytr/sussess/', [PaytrController::class, 'paytrsuccess'])->name('pay.paytr.success');
+    // Route::post('/paytr/payment/{plan_id}', [PaytrController::class, 'PlanpayWithPaytr'])->name('plan.pay.with.paytr');
+    // Route::get('/paytr/sussess/', [PaytrController::class, 'paytrsuccess'])->name('pay.paytr.success');
 
-    Route::post('/plan/yookassa/payment', [YooKassaController::class,'planPayWithYooKassa'])->name('plan.pay.with.yookassa');
-    Route::get('/plan/yookassa/{plan}', [YooKassaController::class,'planGetYooKassaStatus'])->name('plan.get.yookassa.status');
+    // Route::post('/plan/yookassa/payment', [YooKassaController::class, 'planPayWithYooKassa'])->name('plan.pay.with.yookassa');
+    // Route::get('/plan/yookassa/{plan}', [YooKassaController::class, 'planGetYooKassaStatus'])->name('plan.get.yookassa.status');
 
-    Route::any('/midtrans', [MidtransController::class, 'planPayWithMidtrans'])->name('plan.get.midtrans');
-    Route::any('/midtrans/callback', [MidtransController::class, 'planGetMidtransStatus'])->name('plan.get.midtrans.status');
+    // Route::any('/midtrans', [MidtransController::class, 'planPayWithMidtrans'])->name('plan.get.midtrans');
+    // Route::any('/midtrans/callback', [MidtransController::class, 'planGetMidtransStatus'])->name('plan.get.midtrans.status');
 
-    Route::any('/xendit/payment', [XenditPaymentController::class, 'planPayWithXendit'])->name('plan.xendit.payment');
-    Route::any('/xendit/payment/status', [XenditPaymentController::class, 'planGetXenditStatus'])->name('plan.xendit.status');
+    // Route::any('/xendit/payment', [XenditPaymentController::class, 'planPayWithXendit'])->name('plan.xendit.payment');
+    // Route::any('/xendit/payment/status', [XenditPaymentController::class, 'planGetXenditStatus'])->name('plan.xendit.status');
 
-    Route::resource('competencies', CompetenciesController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::resource('competencies', CompetenciesController::class)->middleware(['auth','XSS']);
 
-    Route::resource('performanceType', PerformanceTypeController::class)->middleware(
-        [
-            'auth',
-            'XSS',
-        ]
-    );
+    Route::resource('performanceType', PerformanceTypeController::class)->middleware(['auth','XSS']);
 
     //employee Import & Export
     Route::get('import/employee/file', [EmployeeController::class, 'importFile'])->name('employee.file.import');
@@ -1512,7 +591,6 @@ Route::group(['middleware' => ['verified']], function () {
     Route::get('export/employee', [EmployeeController::class, 'export'])->name('employee.export');
 
     // Timesheet Import & Export
-
     Route::get('import/timesheet/file', [TimeSheetController::class, 'importFile'])->name('timesheet.file.import');
     Route::post('import/timesheet', [TimeSheetController::class, 'import'])->name('timesheet.import');
     Route::get('export/timesheet', [TimeSheetController::class, 'export'])->name('timesheet.export');
@@ -1585,7 +663,7 @@ Route::group(['middleware' => ['verified']], function () {
     Route::resource('contract', ContractController::class)->middleware(['auth', 'XSS']);
     Route::post('/contract_status_edit/{id}', [ContractController::class, 'contract_status_edit'])->name('contract.status')->middleware(['auth', 'XSS']);
     Route::post('/contract/{id}/file', [ContractController::class, 'fileUpload'])->name('contracts.file.upload')->middleware(['auth', 'XSS']);
-    Route::get('/contract/{id}/file/{fid}',  [ContractController::class, 'fileDownload'])->name('contracts.file.download')->middleware(['auth', 'XSS']);
+    Route::get('/contract/{id}/file/{fid}', [ContractController::class, 'fileDownload'])->name('contracts.file.download')->middleware(['auth', 'XSS']);
     Route::get('/contract/{id}/file/delete/{fid}', [ContractController::class, 'fileDelete'])->name('contracts.file.delete')->middleware(['auth', 'XSS']);
     Route::post('/contract/{id}/notestore', [ContractController::class, 'noteStore'])->name('contracts.note.store')->middleware(['auth']);
     Route::get('/contract/{id}/note', [ContractController::class, 'noteDestroy'])->name('contracts.note.destroy')->middleware(['auth']);

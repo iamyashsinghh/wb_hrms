@@ -139,33 +139,7 @@
                 }
             ?>
 
-            <li class="dropdown dash-h-item drp-language">
-                <a class="dash-head-link dropdown-toggle arrow-none me-0 " data-bs-toggle="dropdown" href="#"
-                    role="button" aria-haspopup="false" aria-expanded="false" id="dropdownLanguage">
-                    <i class="ti ti-world nocolor"></i>
-                    <span class="drp-text hide-mob"><?php echo e(Str::ucfirst($LangName)); ?></span>
-                    <i class="ti ti-chevron-down drp-arrow nocolor"></i>
-                </a>
-                <div class="dropdown-menu dash-h-dropdown dropdown-menu-end" aria-labelledby="dropdownLanguage">
-                    
-                    <?php $__currentLoopData = App\Models\Utility::languages(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $code => $lang): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <a href="<?php echo e(route('change.language', $code)); ?>"
-                            class="dropdown-item <?php echo e($currantLang == $code ? 'text-primary' : ''); ?>">
-                            <span><?php echo e(ucFirst($lang)); ?></span>
-                        </a>
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                    <?php if(\Auth::user()->type == 'super admin'): ?>
-                        <div class="dropdown-divider m-0"></div>
-                        <a href="#" class="dropdown-item text-primary" data-size="md"
-                            data-url="<?php echo e(route('create.language')); ?>" data-ajax-popup="true"
-                            data-title="<?php echo e(__('Create New Language')); ?>"
-                            data-bs-toggle="tooltip"><?php echo e(__('Create Language')); ?></a>
-                        <div class="dropdown-divider m-0"></div>
-                        <a href="<?php echo e(route('manage.language', [basename(App::getLocale())])); ?>"
-                            class="dropdown-item text-primary"><?php echo e(__('Manage Language')); ?></a>
-                    <?php endif; ?>
-                </div>
-            </li>
+            
 
         </ul>
     </div>

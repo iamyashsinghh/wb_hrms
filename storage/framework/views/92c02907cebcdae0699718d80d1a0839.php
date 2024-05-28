@@ -1,12 +1,12 @@
 <?php
-    
+
     $logo = \App\Models\Utility::get_file('uploads/logo/');
     $company_logo = \App\Models\Utility::GetLogo();
     $users = \Auth::user();
     $profile = \App\Models\Utility::get_file('uploads/avatar/');
     $currantLang = $users->currentLanguage();
     $emailTemplate = App\Models\EmailTemplate::getemailTemplate();
-    $lang= Auth::user()->lang;
+    $lang = Auth::user()->lang;
 ?>
 
 <?php if(isset($setting['cust_theme_bg']) && $setting['cust_theme_bg'] == 'on'): ?>
@@ -453,12 +453,14 @@
                                 data-feather="chevron-right"></i></span></a>
                     <ul class="dash-submenu">
                         <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('Manage Job')): ?>
-                            <li class="dash-item <?php echo e(Request::route()->getName() == 'job.index' ? 'active' : 'dash-hasmenu'); ?>">
+                            <li
+                                class="dash-item <?php echo e(Request::route()->getName() == 'job.index' ? 'active' : 'dash-hasmenu'); ?>">
                                 <a class="dash-link" href="<?php echo e(route('job.index')); ?>"><?php echo e(__('Jobs')); ?></a>
                             </li>
                         <?php endif; ?>
                         <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('Manage Job')): ?>
-                            <li class="dash-item <?php echo e(Request::route()->getName() == 'job.create' ? 'active' : 'dash-hasmenu'); ?>">
+                            <li
+                                class="dash-item <?php echo e(Request::route()->getName() == 'job.create' ? 'active' : 'dash-hasmenu'); ?>">
                                 <a class="dash-link" href="<?php echo e(route('job.create')); ?>"><?php echo e(__('Job Create ')); ?></a>
                             </li>
                         <?php endif; ?>
@@ -599,7 +601,8 @@
             <?php endif; ?>
 
             <?php if(\Auth::user()->type == 'company'): ?>
-                <li class="dash-item <?php echo e(Request::route()->getName() == 'notification-templates.update' || Request::segment(1) == 'notification-templates' ? 'active' : ''); ?>">
+                <li
+                    class="dash-item <?php echo e(Request::route()->getName() == 'notification-templates.update' || Request::segment(1) == 'notification-templates' ? 'active' : ''); ?>">
                     <a href="<?php echo e(route('notification-templates.index')); ?>" class="dash-link"><span
                             class="dash-micon"><i class="ti ti-bell"></i></span><span
                             class="dash-mtext"><?php echo e(__('Notification Template')); ?></span></a>
@@ -649,7 +652,7 @@
                 
             <?php endif; ?>
 
-            <?php if(\Auth::user()->type == 'super admin'): ?>
+            <?php if(\Auth::user()->type == 'company'): ?>
                 <li
                     class="dash-item <?php echo e(Request::route()->getName() == 'email_template.show' || Request::segment(1) == 'email_template_lang' || Request::route()->getName() == 'manageemail.lang' ? 'active' : ''); ?>">
                     <a href="<?php echo e(route('manage.email.language', [$emailTemplate->id, \Auth::user()->lang])); ?>"
