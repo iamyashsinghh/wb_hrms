@@ -341,7 +341,7 @@
                                 <a class="dash-link" href="{{ route('expense.index') }}">{{ __('Expense') }}</a>
                             </li>
                         @endcan
-                        
+
                         @can('Manage Transfer Balance')
                             <li class="dash-item">
                                 <a class="dash-link"
@@ -517,12 +517,12 @@
 
 
             <!-- ticket-->
-            @can('Manage Ticket')
+            {{-- @can('Manage Ticket')
                 <li class="dash-item {{ Request::segment(1) == 'ticket' ? 'active' : '' }}">
                     <a href="{{ route('ticket.index') }}" class="dash-link"><span class="dash-micon"><i
                                 class="ti ti-ticket"></i></span><span class="dash-mtext">{{ __('Ticket') }}</span></a>
                 </li>
-            @endcan
+            @endcan --}}
 
             <!-- Event-->
             @can('Manage Event')
