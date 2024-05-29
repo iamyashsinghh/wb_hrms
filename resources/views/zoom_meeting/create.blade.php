@@ -1,6 +1,7 @@
 @php
     $setting = App\Models\Utility::settings();
-    $plan = Utility::getChatGPTSettings();
+    $plan = new stdClass();
+    $plan->enable_chatgpt = "on";
 @endphp
 {{ Form::open(['url' => 'zoom-meeting', 'enctype' => 'multipart/form-data', 'autocomplete' => 'off']) }}
 <div class="modal-body">
@@ -78,6 +79,6 @@
 
 <script type="text/javascript">
     var d = new Date();
-    var elem = document.getElementById("current_date"); 
+    var elem = document.getElementById("current_date");
     elem.value = d.toISOString().slice(0,16);
   </script>

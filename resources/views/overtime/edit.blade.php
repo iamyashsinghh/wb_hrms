@@ -1,5 +1,6 @@
 @php
-    $plan = Utility::getChatGPTSettings();
+    $plan = new stdClass();
+    $plan->enable_chatgpt = "on";
 @endphp
 
 {{ Form::model($overtime, ['route' => ['overtime.update', $overtime->id], 'method' => 'PUT']) }}

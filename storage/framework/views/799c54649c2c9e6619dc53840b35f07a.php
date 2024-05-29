@@ -127,8 +127,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-
-
+                                
                                 <?php $__currentLoopData = $timeSheets; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $timeSheet): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <tr>
                                         <?php if(\Auth::user()->type != 'employee'): ?>

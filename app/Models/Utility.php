@@ -1801,15 +1801,8 @@ class Utility extends Model
         $image_size = number_format($image_size / 1048576, 2);
 
         $user   = User::find($company_id);
-        $plan   = Plan::find($user->plan);
         $total_storage = $user->storage_limit + $image_size;
-
-        if ($plan->storage_limit <= $total_storage && $plan->storage_limit != -1) {
-            $error = __('Plan storage limit is over so please upgrade the plan.');
-            return $error;
-        } else {
-            $user->storage_limit = $total_storage;
-        }
+        $user->storage_limit = $total_storage;
 
         $user->save();
         return 1;
@@ -1825,7 +1818,6 @@ class Utility extends Model
 
         $image_size = number_format($fileSize / 1048576, 2);
         $user   = User::find($company_id);
-        $plan   = Plan::find($user->plan);
         $total_storage = $user->storage_limit - $image_size;
         $user->storage_limit = $total_storage;
         $user->save();
@@ -1838,7 +1830,6 @@ class Utility extends Model
         }
         return true;
     }
-    // end for (plans) storage limit - for file upload size
 
     public static function flagOfCountry()
     {
@@ -1859,13 +1850,6 @@ class Utility extends Model
             'pt-br' => '🇵🇹 pt-br',
         ];
         return $arr;
-    }
-
-    public static function getChatGPTSettings()
-    {
-        $user = User::find(\Auth::user()->creatorId());
-        $plan = \App\Models\Plan::find($user->plan);
-        return $plan;
     }
 
     public static function languagecreate()
@@ -2292,18 +2276,18 @@ class Utility extends Model
             $data->where('created_by', '=', 1);
             $data = $data->get();
         }
-        
+
         $settings = [
             'pusher_app_id' => '',
             'pusher_app_key' => '',
             'pusher_app_secret' => '',
             'pusher_app_cluster' => '',
         ];
-        
+
         foreach ($data as $row) {
             $settings[$row->name] = $row->value;
         }
-        
+
         return $settings;
     }
 

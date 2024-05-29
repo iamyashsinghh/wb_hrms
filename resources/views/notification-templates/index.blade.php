@@ -1,5 +1,6 @@
 @php
-    $plan = Utility::getChatGPTSettings();
+    $plan = new stdClass();
+    $plan->enable_chatgpt = "on";
     $languages = \App\Models\Utility::languages();
     $lang = isset($curr_noti_tempLang->lang) ? $curr_noti_tempLang->lang : 'en';
     if ($lang == null) {

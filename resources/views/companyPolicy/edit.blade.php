@@ -1,10 +1,11 @@
 @php
-    $plan = Utility::getChatGPTSettings();
+    $plan = new stdClass();
+    $plan->enable_chatgpt = "on";
 @endphp
 
 {{ Form::model($companyPolicy, ['route' => ['company-policy.update', $companyPolicy->id],'method' => 'PUT','enctype' => 'multipart/form-data']) }}
 <div class="modal-body">
-    
+
     @if ($plan->enable_chatgpt == 'on')
     <div class="text-end">
         <a href="#" class="btn btn-sm btn-primary" data-size="medium" data-ajax-popup-over="true"
@@ -55,7 +56,7 @@
                         @php
                                 $policyPath=\App\Models\Utility::get_file('uploads/companyPolicy/');
                                 $logo=\App\Models\Utility::get_file('uploads/companyPolicy/');
-                                
+
                              @endphp
                         <input type="file" class="form-control file" name="attachment" id="attachment" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])">
                         <img id="blah" alt="your image" width="100" src="@if($companyPolicy->attachment){{$policyPath.$companyPolicy->attachment}}@else{{$logo.'avatar.png'}}@endif" />

@@ -46,27 +46,12 @@ class PaySlipController extends Controller
                 '11' => 'NOV',
                 '12' => 'DEC',
             ];
-           $currentyear = date("Y"); 
+           $currentyear = date("Y");
            $tempyear = intval($currentyear) - 2;
            $year = [];
            for($i = 0;$i<10;$i++){
                 $year[$tempyear + $i] = $tempyear + $i;
            }
-            // $year = [
-
-            //     '2021' => '2021',
-            //     '2022' => '2022',
-            //     '2023' => '2023',
-            //     '2024' => '2024',
-            //     '2025' => '2025',
-            //     '2026' => '2026',
-            //     '2027' => '2027',
-            //     '2028' => '2028',
-            //     '2029' => '2029',
-            //     '2030' => '2030',
-            //     '2031' => '2031',
-            //     '2032' => '2032',
-            // ];
 
             return view('payslip.index', compact('employees', 'month', 'year'));
         } else {
@@ -272,7 +257,6 @@ class PaySlipController extends Controller
                     $data[] = $tmp;
                 }
             }
-
             return $data;
         }
     }

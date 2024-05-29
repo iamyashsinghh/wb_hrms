@@ -30,12 +30,8 @@ class UserController extends Controller
     {
         if (\Auth::user()->can('Manage User')) {
             $user = \Auth::user();
-            if (\Auth::user()->type == 'super admin') {
-                $users = User::where('created_by', '=', $user->creatorId())->where('type', '=', 'company')->with('currentPlan')->get();
-                $CountUser = User::where('created_by')->get();
-            } else {
+
                 $users = User::where('created_by', '=', $user->creatorId())->where('type', '!=', 'employee')->get();
-            }
 
             return view('user.index', compact('users'));
         } else {
@@ -59,7 +55,6 @@ class UserController extends Controller
         if (\Auth::user()->can('Create User')) {
             $default_language = DB::table('settings')->select('value')->where('name', 'default_language')->where('created_by', \Auth::user()->creatorId())->first();
 
-            // new company default language
             if ($default_language == null) {
                 $default_language = DB::table('settings')->select('value')->where('name', 'default_language')->first();
             }
@@ -74,45 +69,8 @@ class UserController extends Controller
             );
             if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
-
                 return redirect()->back()->with('error', $messages->first());
             }
-
-            if (\Auth::user()->type == 'super admin') {
-                $date = date("Y-m-d H:i:s");
-                $user = User::create(
-                    [
-                        'name' => $request['name'],
-                        'email' => $request['email'],
-                        'password' => Hash::make($request['password']),
-                        'type' => 'company',
-                        'plan' => $plan = Plan::where('price', '<=', 0)->first()->id,
-                        'lang' => !empty($default_language) ? $default_language->value : 'en',
-                        'created_by' => \Auth::user()->id,
-                        'email_verified_at' => $date,
-                    ]
-                );
-
-                $user->assignRole('Company');
-                $user->userDefaultData();
-                $user->userDefaultDataRegister($user->id);
-                GenerateOfferLetter::defaultOfferLetterRegister($user->id);
-                ExperienceCertificate::defaultExpCertificatRegister($user->id);
-                JoiningLetter::defaultJoiningLetterRegister($user->id);
-                NOC::defaultNocCertificateRegister($user->id);
-                Utility::jobStage($user->id);
-                $role_r = Role::findById(2);
-
-                //create company default roles
-                Utility::MakeRole($user->id);
-            } else {
-                $objUser    = \Auth::user()->creatorId();
-                $objUser = User::find($objUser);
-                $total_user = $objUser->countUsers();
-                $plan       = Plan::find($objUser->plan);
-
-                if ($total_user < $plan->max_users || $plan->max_users == -1) {
-
                     $role_r = Role::findById($request->role);
                     $date = date("Y-m-d H:i:s");
                     $user   = User::create(
@@ -127,9 +85,6 @@ class UserController extends Controller
                         ]
                     );
                     $user->assignRole($role_r);
-                } else {
-                    return redirect()->back()->with('error', __('Your user limit is over, Please upgrade plan.'));
-                }
             }
 
             $setings = Utility::settings();
@@ -147,9 +102,6 @@ class UserController extends Controller
                 return redirect()->route('user.index')->with('success', __('User successfully created.') . ((!empty($resp) && $resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
             }
             return redirect()->route('user.index')->with('success', __('User successfully created.'));
-        } else {
-            return response()->json(['error' => __('Permission denied.')], 401);
-        }
     }
 
     public function show(User $user)
@@ -322,7 +274,6 @@ class UserController extends Controller
         );
     }
 
-
     public function updatePassword(Request $request)
     {
         if (\Auth::Check()) {
@@ -348,48 +299,6 @@ class UserController extends Controller
             }
         } else {
             return redirect()->route('profile', \Auth::user()->id)->with('error', __('Something is wrong.'));
-        }
-    }
-
-
-    public function upgradePlan($user_id)
-    {
-        $user = User::find($user_id);
-
-        $plans = Plan::get();
-
-        return view('user.plan', compact('user', 'plans'));
-    }
-
-    public function activePlan($user_id, $plan_id)
-    {
-        $admin_payment_setting = Utility::getAdminPaymentSetting();
-        $user       = User::find($user_id);
-        $assignPlan = $user->assignPlan($plan_id);
-        $plan       = Plan::find($plan_id);
-        if ($assignPlan['is_success'] == true && !empty($plan)) {
-            $orderID = strtoupper(str_replace('.', '', uniqid('', true)));
-            Order::create(
-                [
-                    'order_id' => $orderID,
-                    'name' => null,
-                    'card_number' => null,
-                    'card_exp_month' => null,
-                    'card_exp_year' => null,
-                    'plan_name' => $plan->name,
-                    'plan_id' => $plan->id,
-                    'price' => $plan->price,
-                    'price_currency' => !empty($admin_payment_setting['currency']) ? $admin_payment_setting['currency'] : '$',
-                    'txn_id' => '',
-                    'payment_status' => 'succeeded',
-                    'receipt' => null,
-                    'user_id' => $user->id,
-                ]
-            );
-
-            return redirect()->back()->with('success', 'Plan successfully upgraded.');
-        } else {
-            return redirect()->back()->with('error', 'Plan fail to upgrade.');
         }
     }
 

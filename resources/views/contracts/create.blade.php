@@ -1,5 +1,6 @@
 @php
-    $plan = Utility::getChatGPTSettings();
+    $plan = new stdClass();
+    $plan->enable_chatgpt = "on";
 @endphp
 
 {{ Form::open(array('url' => 'contract')) }}
@@ -16,7 +17,7 @@
     @endif
 
     <div class="row">
-        
+
         <div class="col-md-6 form-group">
             {{ Form::label('employee_name', __('Employee Name'),['class'=>'col-form-label']) }}
             {{ Form::select('employee_name', $employee,null, array('class' => 'form-control select2','required'=>'required')) }}
@@ -61,7 +62,7 @@
 <div class="modal-footer">
     <button type="button" class="btn  btn-light" data-bs-dismiss="modal">{{__('Close')}}</button>
     <button type="submit" class="btn  btn-primary">{{__('Create')}}</button>
-   
+
 </div>
 {{ Form::close() }}
 

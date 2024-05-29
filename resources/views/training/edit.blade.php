@@ -1,5 +1,6 @@
 @php
-    $plan = Utility::getChatGPTSettings();
+    $plan = new stdClass();
+    $plan->enable_chatgpt = "on";
 @endphp
 
 {{ Form::model($training, ['route' => ['training.update', $training->id], 'method' => 'PUT']) }}
@@ -55,7 +56,7 @@
             <div class="form-group">
                 {{ Form::label('employee', __('Employee*'), ['class' => 'col-form-label']) }}
                 <div class="employee_div">
-                    <select name="employee" id="employee" class="form-control " required>     
+                    <select name="employee" id="employee" class="form-control " required>
                     </select>
                 </div>
             </div>

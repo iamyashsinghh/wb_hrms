@@ -1,5 +1,6 @@
 @php
-    $plan = Utility::getChatGPTSettings();
+    $plan = new stdClass();
+    $plan->enable_chatgpt = "on";
 @endphp
 
 {{ Form::open(['url' => 'document-upload', 'method' => 'post', 'enctype' => 'multipart/form-data']) }}
@@ -52,7 +53,7 @@
             </div>
         </div>
 
-        
+
 
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="form-group">

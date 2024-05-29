@@ -421,64 +421,6 @@
             </div>
             <div class="row justify-content-center">
 
-                @php
-                    $collection = \App\Models\Plan::orderBy('price', 'ASC')->get();
-                @endphp
-                @foreach ($collection as $key => $value)
-                    <div class="col-xxl-3 col-lg-4 col-md-6">
-                        <div class="card price-card shadow-none {{ $key == 2 ? 'bg-dark' : '' }}">
-                            <div class="card-body">
-                                <span class="price-badge bg-dark">{{ $value->name }}</span>
-                                <span
-                                    class="mb-4 f-w-600 p-price">{{ !empty($admin_payment_setting['currency_symbol']) ? $admin_payment_setting['currency_symbol'] : $adminSettings['site_currency_symbol'] . $value->price }}<small
-                                        class="text-sm">/{{ $value->duration }}</small></span>
-                                <p>
-                                    {!! $value->description !!}
-                                </p>
-                                <ul class="list-unstyled my-3">
-                                    <li>
-                                        <div class="form-check text-start">
-                                            <label class="form-check-label" for="customCheckc1">
-                                                <i class="text-primary ti ti-circle-plus"></i>
-                                                {{ $value->max_users == -1 ? 'Unlimited' : $value->max_users }}
-                                                {{ __('User') }}</label>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="form-check text-start">
-                                            <i class="text-primary ti ti-circle-plus"></i>
-                                            <label class="form-check-label"
-                                                for="customCheckc1">{{ $value->max_employees == -1 ? 'Unlimited' : $value->max_employees }}
-                                                {{ __('Employees') }}</label>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="form-check text-start">
-                                            <i class="text-primary ti ti-circle-plus"></i>
-                                            <label class="form-check-label"
-                                                for="customCheckc1">{{ $value->storage_limit == -1 ? __('Lifetime') : $value->storage_limit }}
-                                                {{ __('MB Storage') }}</label>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="form-check text-start">
-                                            <i class="text-primary ti ti-circle-plus"></i>
-                                            <label class="form-check-label"
-                                                for="customCheckc1">{{ $value->enable_chatgpt == 'on' ? __('Enable Chat GPT') : __('Disable Chat GPT') }}</label>
-                                        </div>
-                                    </li>
-
-                                </ul>
-                                <div class="d-grid">
-                                    <a href="{{ route('register') }}"
-                                        class="btn btn-primary rounded-pill">{{ __('Start with Starter') }}
-                                        <i data-feather="log-in" class="ms-2"></i> </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-
             </div>
         </div>
     </section>

@@ -1,6 +1,7 @@
 @php
     $setting = App\Models\Utility::settings();
-    $plan = Utility::getChatGPTSettings();
+    $plan = new stdClass();
+    $plan->enable_chatgpt = "on";
 @endphp
 {{ Form::open(['url' => 'interview-schedule', 'method' => 'post']) }}
 <div class="modal-body">

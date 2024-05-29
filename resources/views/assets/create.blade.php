@@ -1,5 +1,6 @@
 @php
-    $plan = Utility::getChatGPTSettings();
+    $plan = new stdClass();
+    $plan->enable_chatgpt = "on";
 @endphp
 
 {{ Form::open(['url' => 'account-assets', 'method' => 'post']) }}
@@ -31,7 +32,7 @@
                 <div class="form-icon-user">
                     {{ Form::text('name', null, ['class' => 'form-control', 'placeholder' => __('Enter Asset Name')]) }}
                 </div>
-               
+
             </div>
         </div>
 
@@ -41,7 +42,7 @@
                 <div class="form-icon-user">
                     {{ Form::number('amount', '', ['class' => 'form-control', 'required' => 'required', 'step' => '0.01', 'placeholder' => __('Enter Amount')]) }}
                 </div>
-                
+
             </div>
         </div>
 
@@ -51,7 +52,7 @@
                 <div class="form-icon-user">
                     {{ Form::text('purchase_date', null, array('class' => 'form-control d_week current_date','required'=>'required','autocomplete'=>'off')) }}
                 </div>
-               
+
             </div>
         </div>
 
@@ -61,7 +62,7 @@
                 <div class="form-icon-user">
                     {{ Form::text('supported_date', null, array('class' => 'form-control d_week current_date','required'=>'required','autocomplete'=>'off')) }}
                 </div>
-                
+
             </div>
         </div>
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -70,7 +71,7 @@
                 <div class="form-icon-user">
                     {{ Form::textarea('description', null, ['class' => 'form-control', 'rows' => '3', 'placeholder' => __('Enter Description')]) }}
                 </div>
-                
+
             </div>
         </div>
 

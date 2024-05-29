@@ -6,7 +6,8 @@
 @if (Auth::user()->type == 'company')
 
     @php
-        $plan = Utility::getChatGPTSettings();
+        $plan = new stdClass();
+    $plan->enable_chatgpt = "on";
     @endphp
 
     {{ Form::model($event, ['route' => ['event.update', $event->id], 'method' => 'PUT']) }}

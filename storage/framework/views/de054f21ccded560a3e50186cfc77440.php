@@ -1,5 +1,6 @@
 <?php
-    $plan = Utility::getChatGPTSettings();
+    $plan = new stdClass();
+    $plan->enable_chatgpt = "on";
 ?>
 
 <?php echo e(Form::open(['url' => 'overtime', 'method' => 'post'])); ?>

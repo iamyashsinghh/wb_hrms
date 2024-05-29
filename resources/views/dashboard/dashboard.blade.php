@@ -296,23 +296,6 @@
             <div class="col-xxl-12">
                 <div class="row">
                     <div class="col-xl-5">
-
-                        @if (\Auth::user()->type == 'company')
-                            <div class="card">
-                                <div class="card-header card-body table-border-style">
-                                    <h5>{{ __('Storage Status') }} <small>({{ $users->storage_limit . 'MB' }} /
-                                            {{ $plan->storage_limit . 'MB' }})</small></h5>
-                                </div>
-                                <div class="card-body" style="height: 324px; overflow:auto">
-                                    <div class="card shadow-none mb-0">
-                                        <div class="card-body border rounded  p-3">
-                                            <div id="device-chart"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-
                         <div class="card">
                             <div class="card-header card-body table-border-style">
                                 <h5>{{ __('Meeting schedule') }}</h5>
@@ -603,51 +586,5 @@
         </script>
     @endif
 
-    @if (\Auth::user()->type == 'company')
-        <script>
-            (function() {
-                var options = {
-                    series: [{{ round($storage_limit,2) }}],
-                    chart: {
-                        height: 350,
-                        type: 'radialBar',
-                        offsetY: -20,
-                        sparkline: {
-                            enabled: true
-                        }
-                    },
-                    plotOptions: {
-                        radialBar: {
-                            startAngle: -90,
-                            endAngle: 90,
-                            track: {
-                                background: "#e7e7e7",
-                                strokeWidth: '97%',
-                                margin: 5, // margin is in pixels
-                            },
-                            dataLabels: {
-                                name: {
-                                    show: true
-                                },
-                                value: {
-                                    offsetY: -50,
-                                    fontSize: '20px'
-                                }
-                            }
-                        }
-                    },
-                    grid: {
-                        padding: {
-                            top: -10
-                        }
-                    },
-                    colors: ["#870808"],
-                    labels: ['Used'],
-                };
-                var chart = new ApexCharts(document.querySelector("#device-chart"), options);
-                chart.render();
-            })();
-        </script>
-    @endif
 
 @endpush

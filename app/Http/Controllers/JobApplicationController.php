@@ -16,7 +16,6 @@ use App\Models\JobApplicationNote;
 use App\Models\JobOnBoard;
 use App\Models\JobStage;
 use App\Mail\UserCreate;
-use App\Models\Plan;
 use App\Models\User;
 use App\Models\Utility;
 use Illuminate\Http\Request;
@@ -500,9 +499,7 @@ class JobApplicationController extends Controller
 
         $objUser        = User::find(\Auth::user()->creatorId());
         $total_employee = $objUser->countEmployees();
-        $plan           = Plan::find($objUser->plan);
 
-        if ($total_employee < $plan->max_employees || $plan->max_employees == -1) {
             $user = User::create(
                 [
                     'name' => $request['name'],
@@ -515,9 +512,6 @@ class JobApplicationController extends Controller
             );
             $user->save();
             $user->assignRole('Employee');
-        } else {
-            return redirect()->back()->with('error', __('Your employee limit is over, Please upgrade plan.'));
-        }
 
 
         if (!empty($request->document) && !is_null($request->document)) {
@@ -623,7 +617,7 @@ class JobApplicationController extends Controller
             $job->applicant       = !empty($job->applicant) ? explode(',', $job->applicant) : '';
             $job->visibility      = !empty($job->visibility) ? explode(',', $job->visibility) : '';
             $job->custom_question = !empty($job->custom_question) ? explode(',', $job->custom_question) : '';
-    
+
             return json_encode($job);
         }
     }

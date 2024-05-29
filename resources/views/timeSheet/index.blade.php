@@ -164,8 +164,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-
-
+                                
                                 @foreach ($timeSheets as $timeSheet)
                                     <tr>
                                         @if (\Auth::user()->type != 'employee')

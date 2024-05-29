@@ -8,8 +8,6 @@ use App\Models\Designation;
 use App\Models\Document;
 use App\Models\Employee;
 use App\Models\EmployeeDocument;
-use App\Mail\UserCreate;
-use App\Models\Plan;
 use App\Models\User;
 use App\Models\Utility;
 use File;
@@ -99,13 +97,9 @@ class EmployeeController extends Controller
                 return redirect()->back()->withInput()->with('error', $messages->first());
             }
 
-            $objUser        = User::find(\Auth::user()->creatorId());
-            $total_employee = $objUser->countEmployees();
-            $plan           = Plan::find($objUser->plan);
             $date = date("Y-m-d H:i:s");
             $default_language = DB::table('settings')->select('value')->where('name', 'default_language')->where('created_by', \Auth::user()->creatorId())->first();
 
-            // new company default language
             if ($default_language == null) {
                 $default_language = DB::table('settings')->select('value')->where('name', 'default_language')->first();
             }
@@ -138,7 +132,6 @@ class EmployeeController extends Controller
             }
 
 
-            if ($total_employee < $plan->max_employees || $plan->max_employees == -1) {
 
                 $user = User::create(
                     [
@@ -153,17 +146,12 @@ class EmployeeController extends Controller
                 );
                 $user->save();
                 $user->assignRole('Employee');
-            } else {
-                return redirect()->back()->with('error', __('Your employee limit is over, Please upgrade plan.'));
-            }
-
 
             if (!empty($request->document) && !is_null($request->document)) {
                 $document_implode = implode(',', array_keys($request->document));
             } else {
                 $document_implode = null;
             }
-
 
             $employee = Employee::create(
                 [
@@ -189,7 +177,6 @@ class EmployeeController extends Controller
                     'tax_payer_id' => $request['tax_payer_id'],
                     'created_by' => \Auth::user()->creatorId(),
                 ]
-
             );
 
             if ($request->hasFile('document')) {
@@ -713,7 +700,7 @@ class EmployeeController extends Controller
             'start_time' => !empty($settings['company_start_time']) ? $settings['company_start_time'] : '',
             'end_time' => !empty($settings['company_end_time']) ? $settings['company_end_time'] : '',
             'total_hours' => $result,
-            //         
+            //
 
         ];
         $joiningletter->content = JoiningLetter::replaceVariable($joiningletter->content, $obj);

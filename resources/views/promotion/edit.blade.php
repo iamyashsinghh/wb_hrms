@@ -1,5 +1,6 @@
 @php
-    $plan = Utility::getChatGPTSettings();
+    $plan = new stdClass();
+    $plan->enable_chatgpt = "on";
 @endphp
 
 {{ Form::model($promotion, ['route' => ['promotion.update', $promotion->id], 'method' => 'PUT']) }}

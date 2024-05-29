@@ -1,5 +1,6 @@
 @php
-    $plan = Utility::getChatGPTSettings();
+    $plan = new stdClass();
+    $plan->enable_chatgpt = "on";
 @endphp
 
 {{ Form::model($ZoomMeeting, ['route' => ['zoom-meeting.update', $ZoomMeeting->id], 'method' => 'PUT']) }}

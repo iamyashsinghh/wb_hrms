@@ -1,6 +1,7 @@
 @php
     $setting = App\Models\Utility::settings();
-    $plan = Utility::getChatGPTSettings();
+    $plan = new stdClass();
+    $plan->enable_chatgpt = "on";
 @endphp
 
 {{ Form::open(['url' => 'event', 'method' => 'post']) }}

@@ -226,11 +226,11 @@
                             class="dash-mtext">{{ __('Timesheet') }}</span><span class="dash-arrow"><i
                                 data-feather="chevron-right"></i></span></a>
                     <ul class="dash-submenu">
-                        @can('Manage TimeSheet')
+                        {{-- @can('Manage TimeSheet')
                             <li class="dash-item">
                                 <a class="dash-link" href="{{ route('timesheet.index') }}">{{ __('Timesheet') }}</a>
                             </li>
-                        @endcan
+                        @endcan --}}
                         @can('Manage Leave')
 
                             <li class="dash-item {{ Request::segment(1) == 'calender' ? ' active' : '' }}">
@@ -263,7 +263,7 @@
             <!--timesheet-->
 
             <!-- performance-->
-            @if (Gate::check('Manage Indicator') || Gate::check('Manage Appraisal') || Gate::check('Manage Goal Tracking'))
+            {{-- @if (Gate::check('Manage Indicator') || Gate::check('Manage Appraisal') || Gate::check('Manage Goal Tracking'))
                 <li class="dash-item dash-hasmenu">
                     <a href="#!" class="dash-link"><span class="dash-micon"><i
                                 class="ti ti-3d-cube-sphere"></i></span><span
@@ -290,11 +290,11 @@
                         @endcan
                     </ul>
                 </li>
-            @endif
+            @endif --}}
             <!--performance-->
 
             <!--fianance-->
-            @if (Gate::check('Manage Account List') ||
+            {{-- @if (Gate::check('Manage Account List') ||
                     Gate::check('Manage Payee') ||
                     Gate::check('Manage Payer') ||
                     Gate::check('Manage Deposit') ||
@@ -341,7 +341,7 @@
                                 <a class="dash-link" href="{{ route('expense.index') }}">{{ __('Expense') }}</a>
                             </li>
                         @endcan
-
+                        
                         @can('Manage Transfer Balance')
                             <li class="dash-item">
                                 <a class="dash-link"
@@ -350,7 +350,7 @@
                         @endcan
                     </ul>
                 </li>
-            @endif
+            @endif --}}
             <!-- fianance-->
 
             <!--trainning-->

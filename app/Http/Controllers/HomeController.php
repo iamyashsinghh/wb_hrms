@@ -13,7 +13,6 @@ use App\Models\Job;
 use App\Models\Order;
 use App\Models\Payees;
 use App\Models\Payer;
-use App\Models\Plan;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Models\Utility;
@@ -73,7 +72,6 @@ class HomeController extends Controller
                     $arr['url']             = (!empty($event['event_id'])) ? route('eventsshow', $event['event_id']) : '0';
                     //  $arr['url']                = (!empty($event['event_id'])) ? route('eventsshow', $event['event_id']) : '0';
 
-                    // $arr['textColor']       = "white";
                     $arrEvents[]            = $arr;
                 }
 
@@ -85,51 +83,28 @@ class HomeController extends Controller
                 $officeTime['endTime']   = Utility::getValByName('company_end_time');
 
                 return view('dashboard.dashboard', compact('arrEvents', 'announcements', 'employees', 'meetings', 'employeeAttendance', 'officeTime'));
-            } else if ($user->type == 'super admin') {
-                $user                       = \Auth::user();
-                $user['total_user']         = $user->countCompany();
-                $user['total_paid_user']    = $user->countPaidCompany();
-                $user['total_orders']       = Order::total_orders();
-                $user['total_orders_price'] = Order::total_orders_price();
-                $user['total_plan']         = Plan::total_plan();
-                $user['most_purchese_plan'] = (!empty(Plan::most_purchese_plan()) ? Plan::most_purchese_plan()->name : '');
-
-                $chartData = $this->getOrderChart(['duration' => 'week']);
-
-                return view('dashboard.super_admin', compact('user', 'chartData'));
-            } else {
-
+            }else {
                 $events    = Event::where('created_by', '=', \Auth::user()->creatorId())->get();
                 $arrEvents = [];
-
                 foreach ($events as $event) {
                     $arr['id']    = $event['id'];
                     $arr['title'] = $event['title'];
                     $arr['start'] = $event['start_date'];
                     $arr['end']   = $event['end_date'];
                     $arr['className'] = $event['color'];
-                    // $arr['borderColor']     = "#fff";
-                    // $arr['textColor']       = "white";
                     $arr['url']             = route('event.edit', $event['id']);
-
                     $arrEvents[] = $arr;
                 }
-
                 $announcements = Announcement::orderBy('announcements.id', 'desc')->take(5)->where('created_by', '=', \Auth::user()->creatorId())->get();
-
                 $employees = User::where('type', '=', 'employee')->where('created_by', '=', \Auth::user()->creatorId())->get();
                 $countEmployee = count($employees);
-
                 $user      = User::where('type', '!=', 'employee')->where('created_by', '=', \Auth::user()->creatorId())->get();
                 $countUser = count($user);
                 $countTicket      = Ticket::where('created_by', '=', \Auth::user()->creatorId())->count();
                 $countOpenTicket  = Ticket::where('status', '=', 'open')->where('created_by', '=', \Auth::user()->creatorId())->count();
                 $countCloseTicket = Ticket::where('status', '=', 'close')->where('created_by', '=', \Auth::user()->creatorId())->count();
-
                 $currentDate = date('Y-m-d');
 
-                // $employees     = User::where('type', '=', 'employee')->where('created_by', '=', \Auth::user()->creatorId())->get();
-                // $countEmployee = count($employees);
                 $notClockIn    = AttendanceEmployee::where('date', '=', $currentDate)->get()->pluck('employee_id');
 
                 $notClockIns = Employee::where('created_by', '=', \Auth::user()->creatorId())->whereNotIn('id', $notClockIn)->get();
@@ -144,14 +119,9 @@ class HomeController extends Controller
                 $meetings = Meeting::where('created_by', '=', \Auth::user()->creatorId())->limit(8)->get();
 
                 $users = User::find(\Auth::user()->creatorId());
-                $plan = Plan::find($users->plan);
-                if ($plan->storage_limit > 0) {
-                    $storage_limit = ($users->storage_limit / $plan->storage_limit) * 100;
-                } else {
-                    $storage_limit = 0;
-                }
 
-                return view('dashboard.dashboard', compact('arrEvents', 'announcements', 'employees', 'activeJob', 'inActiveJOb', 'meetings', 'countEmployee', 'countUser', 'countTicket', 'countOpenTicket', 'countCloseTicket', 'notClockIns', 'accountBalance', 'totalPayee', 'totalPayer', 'users', 'plan', 'storage_limit'));
+
+                return view('dashboard.dashboard', compact('arrEvents', 'announcements', 'employees', 'activeJob', 'inActiveJOb', 'meetings', 'countEmployee', 'countUser', 'countTicket', 'countOpenTicket', 'countCloseTicket', 'notClockIns', 'accountBalance', 'totalPayee', 'totalPayer', 'users'));
             }
         } else {
             if (!file_exists(storage_path() . "/installed")) {
@@ -160,10 +130,10 @@ class HomeController extends Controller
             } else {
                 $settings = Utility::settings();
                 if ($settings['display_landing_page'] == 'on' && \Schema::hasTable('landing_page_settings')) {
-                    $plans = Plan::get();
+
                     $get_section = LandingPageSection::orderBy('section_order', 'ASC')->get();
 
-                    return view('landingpage::layouts.landingpage', compact('plans', 'get_section'));
+                    return view('landingpage::layouts.landingpage', compact('get_section'));
                 } else {
                     return redirect('login');
                 }

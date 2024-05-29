@@ -1,10 +1,11 @@
 @php
-    $plan = Utility::getChatGPTSettings();
+    $plan = new stdClass();
+    $plan->enable_chatgpt = "on";
 @endphp
 
 {{ Form::open(['url' => 'resignation', 'method' => 'post']) }}
 <div class="modal-body">
-    
+
     @if ($plan->enable_chatgpt == 'on')
     <div class="card-footer text-end">
         <a href="#" class="btn btn-sm btn-primary" data-size="medium" data-ajax-popup-over="true" data-url="{{ route('generate', ['resignation']) }}"

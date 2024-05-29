@@ -15,13 +15,12 @@
         ]);
     ?>
     <div class="lang-dropdown-only-desk">
-        <li class="dropdown  drp-language">
+        <li class="dropdown dash-h-item drp-language">
             <a class="dash-head-link dropdown-toggle btn" href="#" data-bs-toggle="dropdown" aria-expanded="false">
                 <span class="drp-text"> <?php echo e(ucFirst($languages[$lang])); ?>
 
                 </span>
             </a>
-            
         </li>
     </div>
 <?php $__env->stopSection(); ?>

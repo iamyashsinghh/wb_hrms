@@ -1,10 +1,11 @@
 @php
-    $plan = Utility::getChatGPTSettings();
+    $plan = new stdClass();
+    $plan->enable_chatgpt = "on";
 @endphp
 
 {{ Form::model($ducumentUpload, ['route' => ['document-upload.update', $ducumentUpload->id], 'method' => 'PUT', 'enctype' => 'multipart/form-data']) }}
 <div class="modal-body">
-    
+
     @if ($plan->enable_chatgpt == 'on')
     <div class="text-end">
         <a href="#" class="btn btn-sm btn-primary" data-size="medium" data-ajax-popup-over="true" data-url="{{ route('generate', ['document-upload']) }}"
