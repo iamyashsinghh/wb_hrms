@@ -53,7 +53,7 @@
                     <div class="card-body">
                         <p class="text-muted pb-0-5">
                             {{ __('My Office Time: ' . $officeTime['startTime'] . ' to ' . $officeTime['endTime']) }}</p>
-                        <div class="row">
+                        <div class="row d-flex">
                             <div class="col-md-6 border-right">
                                 {{ Form::open(['url' => 'attendanceemployee/attendance', 'method' => 'post']) }}
                                 @if (empty($employeeAttendance) || $employeeAttendance->clock_out != '00:00:00')
