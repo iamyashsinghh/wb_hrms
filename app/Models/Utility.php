@@ -1309,7 +1309,6 @@ class Utility extends Model
                     $mimes =  !empty($settings['s3_storage_validation']) ? $settings['s3_storage_validation'] : '';
                 } else {
                     $max_size = !empty($settings['local_storage_max_upload_size']) ? $settings['local_storage_max_upload_size'] : '2048';
-
                     $mimes =  !empty($settings['local_storage_validation']) ? $settings['local_storage_validation'] : '';
                 }
 
@@ -1340,8 +1339,8 @@ class Utility extends Model
                     $name = $name;
 
                     if ($settings['storage_setting'] == 'local') {
-
-                        $request->$key_name->move(storage_path($path), $name);
+                        $realpath = "app/public/$path";
+                        $request->$key_name->move(storage_path($realpath), $name);
 
                         $path = $path . $name;
                     } else if ($settings['storage_setting'] == 'wasabi') {

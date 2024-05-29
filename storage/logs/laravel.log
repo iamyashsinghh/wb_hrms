@@ -332,3 +332,7 @@
 #4 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle()
 #5 {main}
 "} 
+[2024-05-29 16:52:33] local.ERROR: syntax error, unexpected token "<" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected token \"<\" at /media/yash/New Volume/OFFICE/HRMS/hrmgosaas-61nulled/codecanyon-25982934-hrmgo-saas-hrm-and-payroll-tool/main-file/app/Models/Utility.php:1342)
+[stacktrace]
+#0 {main}
+"} 
