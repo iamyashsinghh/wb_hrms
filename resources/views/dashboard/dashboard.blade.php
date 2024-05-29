@@ -54,7 +54,7 @@
                         <p class="text-muted pb-0-5">
                             {{ __('My Office Time: ' . $officeTime['startTime'] . ' to ' . $officeTime['endTime']) }}</p>
                         <div class="row">
-                            <div class="col-md-6 float-right border-right">
+                            <div class="col-md-6 border-right">
                                 {{ Form::open(['url' => 'attendanceemployee/attendance', 'method' => 'post']) }}
                                 @if (empty($employeeAttendance) || $employeeAttendance->clock_out != '00:00:00')
                                     <button type="submit" value="0" name="in" id="clock_in"
@@ -65,7 +65,7 @@
                                 @endif
                                 {{ Form::close() }}
                             </div>
-                            <div class="col-md-6 float-left">
+                            <div class="col-md-6">
                                 @if (!empty($employeeAttendance) && $employeeAttendance->clock_out == '00:00:00')
                                     {{ Form::model($employeeAttendance, ['route' => ['attendanceemployee.update', $employeeAttendance->id], 'method' => 'PUT']) }}
                                     <button type="submit" value="1" name="out" id="clock_out"
