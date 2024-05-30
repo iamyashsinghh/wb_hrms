@@ -10,8 +10,6 @@ use App\Models\Employee;
 use App\Models\IpRestrict;
 use App\Models\User;
 use App\Models\Utility;
-use Carbon\Carbon;
-use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -35,12 +33,8 @@ class AttendanceEmployeeController extends Controller
                     $month = date('m', strtotime($request->month));
                     $year  = date('Y', strtotime($request->month));
 
-
                     $start_date = date($year . '-' . $month . '-01');
                     $end_date = date('Y-m-t', strtotime('01-' . $month . '-' . $year));
-
-                    // old date
-                    // $end_date   = date($year . '-' . $month . '-t');
 
                     $attendanceEmployee->whereBetween(
                         'date',
@@ -56,9 +50,6 @@ class AttendanceEmployeeController extends Controller
                     $year       = date('Y');
                     $start_date = date($year . '-' . $month . '-01');
                     $end_date = date('Y-m-t', strtotime('01-' . $month . '-' . $year));
-
-                    // old date
-                    // $end_date   = date($year . '-' . $month . '-t');
 
                     $attendanceEmployee->whereBetween(
                         'date',
@@ -229,7 +220,7 @@ class AttendanceEmployeeController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+        public function update(Request $request, $id)
     {
         if (\Auth::user()->type == 'company' || \Auth::user()->type == 'hr') {
             $employeeId      = AttendanceEmployee::where('employee_id', $request->employee_id)->first();
@@ -386,7 +377,7 @@ class AttendanceEmployeeController extends Controller
 
         if ($settings['ip_restrict'] == 'on') {
             $userIp = request()->ip();
-            $ip     = IpRestrict::where('created_by', \Auth::user()->creatorId())->whereIn('ip', [$userIp])->first();
+            $ip     = IpRestrict::whereIn('ip', [$userIp])->first();
             if (!empty($ip)) {
                 return redirect()->back()->with('error', __('this ip is not allowed to clock in & clock out.'));
             }
@@ -433,13 +424,11 @@ class AttendanceEmployeeController extends Controller
                 $employeeAttendance->overtime      = '00:00:00';
                 $employeeAttendance->total_rest    = '00:00:00';
                 $employeeAttendance->created_by    = \Auth::user()->id;
-
                 $employeeAttendance->save();
 
                 return redirect()->route('home')->with('success', __('Employee Successfully Clock In.'));
             }
             foreach ($checkDb as $check) {
-
 
                 $employeeAttendance                = new AttendanceEmployee();
                 $employeeAttendance->employee_id   = $employeeId;
@@ -608,7 +597,7 @@ class AttendanceEmployeeController extends Controller
                 echo "<pre>";
                 if ($employee != null && Employee::where('email', $employee[0])->where('created_by', \Auth::user()->creatorId())->exists()) {
                     $email = $employee[0];
-                    
+
                 } else {
                     $email_data[] = $employee[0];
                 }
@@ -706,7 +695,7 @@ class AttendanceEmployeeController extends Controller
                     foreach ($errorArray as $errorData) {
                         $errorRecord[] = implode(',', $errorData->toArray());
                     }
-                    
+
 
                     \Session::put('errorArray', $errorRecord);
                 }

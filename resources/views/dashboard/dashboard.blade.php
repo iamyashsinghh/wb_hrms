@@ -26,7 +26,6 @@
                                 <input type="hidden" id="path_admin" value="{{ url('/') }}">
                             </div>
                             <div class="col-lg-6">
-                                {{-- <div class="form-group"> --}}
                                 <label for=""></label>
                                 @if (isset($setting['is_enabled']) && $setting['is_enabled'] == 'on')
                                     <select class="form-control" name="calender_type" id="calender_type"
@@ -36,7 +35,6 @@
                                             {{ __('Local Calendar') }}</option>
                                     </select>
                                 @endif
-                                {{-- </div> --}}
                             </div>
                         </div>
                     </div>

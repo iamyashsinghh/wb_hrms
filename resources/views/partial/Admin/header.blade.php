@@ -16,8 +16,6 @@
     @else
         <header class="dash-header">
 @endif
-{{-- <header class="dash-header  {{ isset($setting['is_sidebar_transperent']) && $setting['is_sidebar_transperent'] == 'on' ? 'transprent-bg' : '' }}"> --}}
-
 <div class="header-wrapper">
     <div class="me-auto dash-mob-drp">
         <ul class="list-unstyled">
@@ -113,17 +111,7 @@
             @endif
 
             @php
-                // $currantLang = basename(\App::getLocale());
-                // $languages = \App\Models\Utility::languages();
-                // $lang = isset($users->lang) ? $users->lang : 'en';
-                // if ($lang == null) {
-                //     $lang = 'en';
-                // }
-                // if (\Schema::hasTable('languages')) {
-                //     $LangName = \App\Models\Languages::where('code', $lang)->first()->fullName;
-                // } else {
-                //     $LangName = 'english';
-                // }
+
 
                 $lang = isset($users->lang) ? $users->lang : 'en';
                 if ($lang == null) {
@@ -135,41 +123,11 @@
                     $LangName->fullName = 'English';
                 }
             @endphp
-
-            {{-- <li class="dropdown dash-h-item drp-language">
-                <a class="dash-head-link dropdown-toggle arrow-none me-0 " data-bs-toggle="dropdown" href="#"
-                    role="button" aria-haspopup="false" aria-expanded="false" id="dropdownLanguage">
-                    <i class="ti ti-world nocolor"></i>
-                    <span class="drp-text hide-mob">{{ Str::ucfirst($LangName) }}</span>
-                    <i class="ti ti-chevron-down drp-arrow nocolor"></i>
-                </a>
-                <div class="dropdown-menu dash-h-dropdown dropdown-menu-end" aria-labelledby="dropdownLanguage">
-
-                    @foreach (App\Models\Utility::languages() as $code => $lang)
-                        <a href="{{ route('change.language', $code) }}"
-                            class="dropdown-item {{ $currantLang == $code ? 'text-primary' : '' }}">
-                            <span>{{ ucFirst($lang) }}</span>
-                        </a>
-                    @endforeach
-                    @if (\Auth::user()->type == 'super admin')
-                        <div class="dropdown-divider m-0"></div>
-                        <a href="#" class="dropdown-item text-primary" data-size="md"
-                            data-url="{{ route('create.language') }}" data-ajax-popup="true"
-                            data-title="{{ __('Create New Language') }}"
-                            data-bs-toggle="tooltip">{{ __('Create Language') }}</a>
-                        <div class="dropdown-divider m-0"></div>
-                        <a href="{{ route('manage.language', [basename(App::getLocale())]) }}"
-                            class="dropdown-item text-primary">{{ __('Manage Language') }}</a>
-                    @endif
-                </div>
-            </li> --}}
-
         </ul>
     </div>
 </div>
 </header>
 @push('scripts')
-    {{-- @include('Chatify::layouts.modals') --}}
     <script>
         $('#msg-btn').click(function() {
             let contactsPage = 1;
@@ -197,8 +155,6 @@
                         $('.noti-body .avatar').remove()
                         $(this).find('span').remove()
                         $(this).find('p').addClass("d-inline")
-                        // $(this).find('b').addClass('position-absolute')
-                        // $(this).find('b').css({position: "absolute"});
                         $(this).find('b').css({
                             "position": "absolute",
                             "right": "50px"

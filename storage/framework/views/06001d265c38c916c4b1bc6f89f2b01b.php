@@ -26,7 +26,6 @@
                                 <input type="hidden" id="path_admin" value="<?php echo e(url('/')); ?>">
                             </div>
                             <div class="col-lg-6">
-                                
                                 <label for=""></label>
                                 <?php if(isset($setting['is_enabled']) && $setting['is_enabled'] == 'on'): ?>
                                     <select class="form-control" name="calender_type" id="calender_type"
@@ -36,7 +35,6 @@
                                             <?php echo e(__('Local Calendar')); ?></option>
                                     </select>
                                 <?php endif; ?>
-                                
                             </div>
                         </div>
                     </div>
@@ -53,8 +51,8 @@
                     <div class="card-body">
                         <p class="text-muted pb-0-5">
                             <?php echo e(__('My Office Time: ' . $officeTime['startTime'] . ' to ' . $officeTime['endTime'])); ?></p>
-                        <div class="row">
-                            <div class="col-md-6 float-right border-right">
+                        <div class="row d-flex">
+                            <div class="col-md-6 border-right">
                                 <?php echo e(Form::open(['url' => 'attendanceemployee/attendance', 'method' => 'post'])); ?>
 
                                 <?php if(empty($employeeAttendance) || $employeeAttendance->clock_out != '00:00:00'): ?>
@@ -67,7 +65,7 @@
                                 <?php echo e(Form::close()); ?>
 
                             </div>
-                            <div class="col-md-6 float-left">
+                            <div class="col-md-6">
                                 <?php if(!empty($employeeAttendance) && $employeeAttendance->clock_out == '00:00:00'): ?>
                                     <?php echo e(Form::model($employeeAttendance, ['route' => ['attendanceemployee.update', $employeeAttendance->id], 'method' => 'PUT'])); ?>
 
